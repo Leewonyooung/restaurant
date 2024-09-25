@@ -38,3 +38,19 @@ async def select():
         conn.close()
         print("Error:", e)
         return{"results" : "Error"}
+
+@readrouter.get("/category")
+async def select():
+    conn = connect()
+    curs = conn.cursor()
+    try:
+        sql = 'select * from category'
+        curs.execute(sql)
+        rows= curs.fetchall()
+        conn.close()
+        print(rows)
+        return{'results': rows}
+    except Exception as e:
+        conn.close()
+        print("Error:", e)
+        return{"results" : "Error"}

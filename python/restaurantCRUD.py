@@ -60,12 +60,6 @@ async def select():
 
 
 
-@app.get("/view/{file_name}")
-async def get_file(file_name:str):
-    file_path = os.path.join(UPLOAD_FOLDER, file_name)
-    if os.path.exists(file_path):
-        return FileResponse(path=file_path, filename=file_name)
-    return{"result": "Error"}
 
 
 if __name__ == "__main__":
