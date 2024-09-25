@@ -20,13 +20,25 @@ def connect():
 
 
 @router.get("/")
-async def delete(seq : str = None, user_seq:str = None):
+async def update(
+    category_id : str =None,
+    name : str =None,
+    latitude : str =None,
+    longitude : str =None,
+    image : str =None,
+    phone : str =None,
+    represent : str =None,
+    memo : str =None,
+    favorite : str =None,
+    seq : str = None,
+    user_seq : str = None,
+    ):
     conn = connect()
     curs = conn.cursor()
 
     try:
-        sql = "delete from restaurant where seq=%s AND user_seq=%s"
-        curs.execute(sql, (seq, user_seq))
+        sql = "update restaurant set category_id=%s, name=%s, latitude=%s, longitude=%s, image=%s, phone=%s, represent=%s, memo=%s, favorite=%s where seq=%s AND user_seq=%s"
+        curs.execute(sql, (category_id, name, latitude, longitude, image, phone, represent, memo, favorite, seq, user_seq))
         conn.commit()
         conn.close()
         return {"result" : "OK"}
