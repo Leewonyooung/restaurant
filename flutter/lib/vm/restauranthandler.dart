@@ -1,9 +1,17 @@
-import 'package:restaurant/model/restaurant.dart';
-import 'package:restaurant/vm/init_restaurant.dart';
-import 'package:sqflite/sqlite_api.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class Restauranthandler{
-  InitRestaurant handler = InitRestaurant();
+  List restaurantList = [];
+
+  insertRestaurant() async{
+    var url = Uri.parse("http://127.0.0.1:8000/insert");
+    var response = await http.get(url);
+    restaurantList.clear();
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    var result = dataConvertedJSON['results'];
+    restaurantList.addAll(result);
+  }
 
   Future<List<Restaurant>> queryRestaurant() async {
     final Database db = await handler.initializeDB();

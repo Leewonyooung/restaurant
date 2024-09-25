@@ -4,11 +4,9 @@ Description:
 Date: 2024.09.25.
 Usage: 맛집 Create(Insert)
 """
-from fastapi import FastAPI, File, UploadFile
-from fastapi.responses import FileResponse
-import pymysql, os, shutil
-
-app = FastAPI()
+import pymysql, os
+from fastapi import APIRouter, FastAPI, File, UploadFile
+createrouter = APIRouter()
 
 UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):
@@ -25,7 +23,7 @@ def connect():
     )
     return conn
 
-@app.get("/insert")
+@createrouter.get("/insert")
 async def insert(categoryId: str=None, userSeq: str=None, name:str=None, latitude:str=None, longitude: str=None, image:str=None, phone:str=None, represent:str=None, memo:str=None, favorite:str=None):
     conn = connect()
     curs = conn.cursor()
@@ -39,35 +37,3 @@ async def insert(categoryId: str=None, userSeq: str=None, name:str=None, latitud
         conn.close()
         print("Error:", e)
         return{"results" : "Error"}
-
-
-@app.get("/select")
-async def select():
-    conn = connect()
-    curs = conn.cursor()
-    try:
-        sql = 'select seq, category_id,user_seq,name,latitude,longitude,image,phone,represent,memo,favorite from restaurant'
-        curs.execute(sql)
-        rows= curs.fetchall()
-        conn.close()
-        print(rows)
-        return{'results': rows}
-    except Exception as e:
-        conn.close()
-        print("Error:", e)
-        return{"results" : "Error"}
-
-
-
-
-@app.get("/view/{file_name}")
-async def get_file(file_name:str):
-    file_path = os.path.join(UPLOAD_FOLDER, file_name)
-    if os.path.exists(file_path):
-        return FileResponse(path=file_path, filename=file_name)
-    return{"result": "Error"}
-
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
