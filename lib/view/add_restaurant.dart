@@ -1,0 +1,431 @@
+import 'dart:io';
+
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:get/route_manager.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:restaurant/model/restaurant.dart';
+import 'package:restaurant/vm/restauranthandler.dart';
+
+class AddRestaurant extends StatefulWidget {
+  const AddRestaurant({super.key});
+
+  @override
+  State<AddRestaurant> createState() => _AddRestaurantState();
+}
+
+class _AddRestaurantState extends State<AddRestaurant> {
+  List<String> categories = Get.arguments ?? '__';
+  String? selectedValue;
+  late Position currentPosition;
+  XFile? imageFile;
+  late TextEditingController latitudeController;
+  late TextEditingController longitudeController;
+  late TextEditingController nameController;
+  late TextEditingController phoneController;
+  late TextEditingController representController;
+  late TextEditingController commentController;
+  final ImagePicker picker = ImagePicker();
+  late bool canRun;
+  late List location;
+  late double latData;
+  late double longData;
+  Restauranthandler restauranthandler = Restauranthandler();
+
+  @override
+  void initState() {
+    super.initState();
+    latData = 0;
+    longData = 0;
+    checkLocationPermission();
+    latitudeController = TextEditingController();
+    longitudeController = TextEditingController();
+    nameController = TextEditingController();
+    phoneController = TextEditingController();
+    representController = TextEditingController();
+    commentController = TextEditingController();
+  }
+
+  checkLocationPermission() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    if (permission == LocationPermission.deniedForever) {
+      return;
+    }
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
+      getCurrentLocation();
+    }
+  }
+
+  getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition();
+    currentPosition = position;
+    canRun = true;
+    latitudeController.text = currentPosition.latitude.toString();
+    longitudeController.text = currentPosition.longitude.toString();
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      
+      resizeToAvoidBottomInset: true,
+      appBar: AppBar(
+        centerTitle: true,
+        toolbarHeight: 50,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: Text(
+          '맛집 추가',
+          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+        ),
+      ),
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width / 1.7,
+                          height: 150,
+                          decoration: BoxDecoration(color: Colors.grey[100]),
+                          child: Center(
+                              child: imageFile == null
+                                  ? ElevatedButton(
+                                      onPressed: () {
+                                        getImageFromGallery(ImageSource.gallery);
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10))),
+                                      child: const Text('사진 업로드'),
+                                    )
+                                  : Image.file(File(imageFile!.path))),
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        height: 720,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 10, 23, 5),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width / 1.2,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      '위치',
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.fromLTRB(8, 8, 30, 8),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(10),
+                                                border:
+                                                    Border.all(color: Colors.black)),
+                                            height:
+                                                MediaQuery.of(context).size.width / 9,
+                                            width:
+                                                MediaQuery.of(context).size.width / 3,
+                                            child: TextField(
+                                              style: const TextStyle(
+                                                fontSize: 13,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                              readOnly: true,
+                                              controller: latitudeController,
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                              border: Border.all(color: Colors.black)),
+                                          height: MediaQuery.of(context).size.width / 9,
+                                          width:
+                                              MediaQuery.of(context).size.width / 3,
+                                          child: TextField(
+                                            style: const TextStyle(
+                                              fontSize: 13,
+                                            ),
+                                            readOnly: true,
+                                            textAlign: TextAlign.center,
+                                            controller: longitudeController,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width / 1,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      '이름',
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(10),
+                                                border: Border.all(color: Colors.black)),
+                                            height: MediaQuery.of(context).size.width / 9,
+                                            width:
+                                                MediaQuery.of(context).size.width / 1.25,
+                                            child: TextField(
+                                              controller: nameController,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width / 1,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      '전화번호',
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(10),
+                                                border: Border.all(color: Colors.black)),
+                                            height: MediaQuery.of(context).size.width / 9,
+                                            width:
+                                                MediaQuery.of(context).size.width / 1.25,
+                                            child: TextField(
+                                              keyboardType: TextInputType.phone,
+                                              controller: phoneController,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width / 1,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      '분류',
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(10),
+                                                border: Border.all(color: Colors.black)),
+                                            height: MediaQuery.of(context).size.width / 9,
+                                            width:
+                                                MediaQuery.of(context).size.width / 1.25,
+                                            child: DropdownButtonHideUnderline(
+                                  child: DropdownButton2<String>(
+                                hint: const Text('분류'),
+                                items: categories
+                                    .map((String categories) =>
+                                        DropdownMenuItem<String>(
+                                          value: categories,
+                                          child: Text(categories),
+                                        ))
+                                    .toList(),
+                                value: selectedValue,
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    selectedValue = value;
+                                  });
+                                },
+                                buttonStyleData: const ButtonStyleData(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  height: 45,
+                                  width: 80,
+                                ),
+                              )),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width / 1,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      '대표음식',
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(10),
+                                                border: Border.all(color: Colors.black)),
+                                            height: MediaQuery.of(context).size.width / 9,
+                                            width:
+                                                MediaQuery.of(context).size.width / 1.25,
+                                            child: TextField(
+                                              controller: representController,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width / 1,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      '메모',
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(10),
+                                                border: Border.all(color: Colors.black)),
+                                            width:
+                                                MediaQuery.of(context).size.width / 1.25,
+                                            child: TextField(
+                                              minLines: 8,
+                                              maxLines: 20,
+                                              controller: commentController,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                     
+                    ],
+                  ),
+                ),
+                 Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width / 1.1,
+                    child: ElevatedButton(
+                        onPressed: () async {
+                          Restaurant restaurant = Restaurant(
+                              name: nameController.text.trim(),
+                              group: selectedValue!,
+                              latitude:
+                                  double.parse(latitudeController.text.trim()),
+                              longitude:
+                                  double.parse(longitudeController.text.trim()),
+                              phone: phoneController.text.trim(),
+                              represent: representController.text.trim(),
+                              comment: commentController.text.trim(),
+                              image: await File(imageFile!.path).readAsBytes());
+                          await addRestaurant(restaurant);
+                        },
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.secondaryContainer),
+                        child: const Text('추가 하기')),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future getImageFromGallery(ImageSource imageSource) async {
+    final XFile? pickedFile = await picker.pickImage(source: imageSource);
+    if (pickedFile == null) {
+      return;
+    } else {
+      imageFile = XFile(pickedFile.path);
+    }
+    setState(() {});
+  }
+
+  addRestaurant(Restaurant restaurant) async {
+    Get.back();
+    int result = await restauranthandler.insertRestaurant(restaurant);
+    if (result == 0) {
+      Get.snackbar('에러', '데이터가 입력되지 않았습니다.', backgroundColor: Colors.red);
+    }
+    setState(() {});
+  }
+}
