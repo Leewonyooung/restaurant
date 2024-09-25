@@ -15,7 +15,7 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 def connect():
     conn = pymysql.connect(
-        host="127.0.0.1",
+        host="192.168.50.147",
         user="root",
         password="qwer1234",
         db="musteat",
@@ -23,7 +23,7 @@ def connect():
     )
     return conn
 
-@createrouter.get("/insert")
+@createrouter.get("/")
 async def insert(categoryId: str=None, userSeq: str=None, name:str=None, latitude:str=None, longitude: str=None, image:str=None, phone:str=None, represent:str=None, memo:str=None, favorite:str=None):
     conn = connect()
     curs = conn.cursor()

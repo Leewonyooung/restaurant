@@ -15,7 +15,7 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 def connect():
     conn = pymysql.connect(
-        host="127.0.0.1",
+        host="192.168.50.147",
         user="root",
         password="qwer1234",
         db="musteat",
@@ -23,7 +23,7 @@ def connect():
     )
     return conn
 
-@readrouter.get("/read")
+@readrouter.get("/")
 async def select():
     conn = connect()
     curs = conn.cursor()
