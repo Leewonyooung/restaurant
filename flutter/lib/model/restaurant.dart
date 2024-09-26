@@ -1,47 +1,44 @@
-import 'dart:typed_data';
+
 
 class Restaurant{
-  int? id;
+  int? seq;
+  late String category_id;
+  late int user_seq;
   late String name;
-  late String group;
   late double latitude;
   late double longitude;
+  late String image;
   late String phone;
   late String represent;
-  late String comment;
-  late Uint8List image;
+  late String memo;
+  late bool favorite;
 
   Restaurant(
     {
-      this.id,
+      this.seq,
+      required this.category_id,
+      required this.user_seq,
       required this.name,
-      required this.group,
       required this.latitude,
       required this.longitude,
+      required this.image,
       required this.phone,
       required this.represent,
-      required this.comment,
-      required this.image,
+      required this.memo,
+      required this.favorite,
     }
   );
 
-  Restaurant.category({
-    this.id,
-    required this.group,
-  });
-
-  Restaurant.categoryfromMap(Map<String, dynamic> res):
-    group = res['category'];
-
-
   Restaurant.fromMap(Map<String, dynamic> res):
-    id = res['id'],
+    seq = res['seq'],
+    category_id = res['category_id'],
+    user_seq = res['user_seq'],
     name = res['name'],
-    group = res['category'],
     latitude = res['latitude'],
     longitude =  res['longitude'],
+    image =  res['image'],
     phone = res['phone'],
     represent = res['represent'],
-    comment = res['comment'],
-    image = res['image'];
+    memo = res['memo'],
+    favorite = res['image'] == 1;
 }
