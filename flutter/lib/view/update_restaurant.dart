@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:restaurant/model/restaurant.dart';
 import 'package:restaurant/vm/restauranthandler.dart';
+import 'package:http/http.dart' as http;
 
 class UpdateRestaurant extends StatefulWidget {
   const UpdateRestaurant({super.key});
@@ -18,7 +20,7 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
   var value = Get.arguments ?? '__';
   late Position currentPosition;
   late int firstDisp;
-  XFile? imageFile;
+  XFile? imageFile; //IMG
   late TextEditingController latitudeController;
   late TextEditingController longitudeController;
   late TextEditingController nameController;
@@ -26,12 +28,16 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
   late TextEditingController groupController;
   late TextEditingController representController;
   late TextEditingController commentController;
-  final ImagePicker picker = ImagePicker();
+  final ImagePicker picker = ImagePicker(); //IMG
   late bool canRun;
   late List location;
   late double latData;
   late double longData;
   Restauranthandler restauranthandler = Restauranthandler();
+
+  //——hjy———ImagePicker에서 선택된 filename————————————————
+  String filename = "";
+  //——————————————————————————————————————
 
   @override
   void initState() {
@@ -105,17 +111,22 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
+
+//---hjy수정---------------------------------------------------------------------
                   child: Container(
                     width: MediaQuery.of(context).size.width / 1.7,
                     height: 150,
                     decoration:
                         BoxDecoration(border: Border.all(color: Colors.black)),
                     child: firstDisp == 0
-                        ? Center(child: Image.memory(value[8]))
+                        ? Center(
+                            child: Image.network(
+                                "http://127.0.0.1:8000/view/${value[5]}"))
                         : imageFile == null
                             ? const Text('Image is not selected')
                             : Image.file(File(imageFile!.path)),
                   ),
+//------------------------------------------------------------------------------
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -306,24 +317,31 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
                         ),
                       ),
                       ElevatedButton(
-                          onPressed: () async {
-                            Restaurant restaurant = Restaurant(
-                                id: value[0],
-                                name: nameController.text.trim(),
-                                group: groupController.text.trim(),
-                                latitude: double.parse(
-                                    latitudeController.text.trim()),
-                                longitude: double.parse(
-                                    longitudeController.text.trim()),
-                                phone: phoneController.text.trim(),
-                                represent: representController.text.trim(),
-                                comment: commentController.text.trim(),
-                                image: imageFile == null
-                                    ? value[8]
-                                    : await File(imageFile!.path)
-                                        .readAsBytes());
-                            await updateRestaurant(restaurant);
+                          onPressed: () {
+                            if (imageFile == null) {
+                              updateJSONData();
+                            } else {
+                              updateJSONDataAll();
+                            }
                           },
+                          // onPressed: () async {
+                          //   Restaurant restaurant = Restaurant(
+                          //       id: value[0],
+                          //       name: nameController.text.trim(),
+                          //       group: groupController.text.trim(),
+                          //       latitude: double.parse(
+                          //           latitudeController.text.trim()),
+                          //       longitude: double.parse(
+                          //           longitudeController.text.trim()),
+                          //       phone: phoneController.text.trim(),
+                          //       represent: representController.text.trim(),
+                          //       comment: commentController.text.trim(),
+                          //       image: imageFile == null
+                          //           ? value[8]
+                          //           : await File(imageFile!.path)
+                          //               .readAsBytes());
+                          //   await updateRestaurant(restaurant);
+                          // },
                           child: const Text('수정'))
                     ],
                   ),
@@ -336,25 +354,80 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
     );
   }
 
-  Future getImageFromGallery(ImageSource imageSource) async {
+//—hjy수정——————————————————————————————————
+  getImageFromGallery(ImageSource imageSource) async {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
-    if (pickedFile == null) {
-      return;
-    } else {
-      imageFile = XFile(pickedFile.path);
-      firstDisp += 1;
-    }
+    imageFile = XFile(pickedFile!.path);
+    firstDisp = 1; //수정할때
     setState(() {});
+    print(imageFile!.path); //이미지 경로 확인
   }
 
-  updateRestaurant(Restaurant restaurant) async {
-    Get.back();
-    int result = await restauranthandler.updateRestaurant(restaurant);
-    if(result == 0){
-      Get.snackbar('에러', '데이터가 입력되지 않았습니다.',backgroundColor: Colors.red);
+//———————————————————————————————————————
+
+  // updateRestaurant(Restaurant restaurant) async {
+  //   Get.back();
+  //   int result = await restauranthandler.updateRestaurant(restaurant);
+  //   if (result == 0) {
+  //     Get.snackbar('에러', '데이터가 입력되지 않았습니다.', backgroundColor: Colors.red);
+  //   }
+  //   setState(() {});
+  // }
+
+//—hjy수정——————————————————————————————————
+  updateJSONData() async {
+    var url = Uri.parse(
+        'http://127.0.0.1:8000/update?seq=${value[0]}&category_id=${value[1]}&user_seq${value[2]}&name=${nameController.text}&latitude=${double.parse(latitudeController.text)}&longitude=${double.parse(longitudeController.text)}&phone=${phoneController.text}&represent=${representController.text}&memo=${commentController.text}&favorite=${value[10]}');
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    var result = dataConvertedJSON['result'];
+    if (result == 'OK') {
+      _showDialog();
+    } else {
+      errorSnackBar();
     }
-    setState(() {
-      
-    });
+  }
+
+  updateJSONDataAll() async {
+    var url = Uri.parse(
+        'http://127.0.0.1:8000/updateAll?seq=${value[0]}&category_id=${value[1]}&user_seq${value[2]}&name=${nameController.text}&latitude=${double.parse(latitudeController.text)}&longitude=${double.parse(longitudeController.text)}&image=${filename}&phone=${phoneController.text}&represent=${representController.text}&memo=${commentController.text}&favorite=${value[10]}');
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    var result = dataConvertedJSON['result'];
+    if (result == 'OK') {
+      _showDialog();
+    } else {
+      errorSnackBar();
+    }
+  }
+
+  _showDialog() {
+    Get.defaultDialog(
+      title: '입력 결과',
+      middleText: '입력이 완료되었습니다.',
+      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+      barrierDismissible: false,
+      actions: [
+        TextButton(
+          onPressed: () {
+            Get.back();
+            Get.back();
+          },
+          child: const Text('확인'),
+        )
+      ],
+    );
+  }
+
+  errorSnackBar() {
+    Get.snackbar(
+      "Error",
+      "데이터를 확인하세요",
+      snackPosition: SnackPosition.BOTTOM,
+      duration: Duration(seconds: 2),
+      backgroundColor: Colors.red,
+      colorText: Colors.amber,
+    );
   }
 }
+//———————————————————————————————————————

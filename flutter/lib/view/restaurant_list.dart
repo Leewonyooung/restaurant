@@ -8,7 +8,7 @@ import 'package:restaurant/view/add_restaurant.dart';
 import 'package:restaurant/view/restaurant_location.dart';
 import 'package:restaurant/view/search_restaurant.dart';
 import 'package:restaurant/view/update_restaurant.dart';
-import 'package:restaurant/vm/favoritehandler.dart';
+// import 'package:restaurant/vm/favoritehandler.dart';
 import 'package:restaurant/vm/restauranthandler.dart';
 
 class RestaurantList extends StatefulWidget {
@@ -20,7 +20,7 @@ class RestaurantList extends StatefulWidget {
 
 class _RestaurantListState extends State<RestaurantList> {
   Restauranthandler restauranthandler = Restauranthandler();
-  Favoritehandler favoritehandler = Favoritehandler();
+  // Favoritehandler favoritehandler = Favoritehandler();
   late List<String> categories;
   String? selectedValue;
   late String keyword;
@@ -202,21 +202,21 @@ class _RestaurantListState extends State<RestaurantList> {
                                   actions: [
                                     CupertinoActionSheetAction(
                                       onPressed: () {
-                                        favoritehandler.insertFavoriteRestaurant(
-                                          Restaurant(
-                                            seq: snapshot.data![index].seq,
-                                            category_id: snapshot.data![index].category_id,
-                                            user_seq: snapshot.data![index].user_seq,
-                                            name: snapshot.data![index].name, 
-                                            latitude: snapshot.data![index].latitude, 
-                                            longitude: snapshot.data![index].longitude, 
-                                            image: snapshot.data![index].image,
-                                            phone: snapshot.data![index].phone, 
-                                            represent: snapshot.data![index].represent, 
-                                            memo: snapshot.data![index].comment, 
-                                            favorite: snapshot.data![index] == "1" ? true : false
-                                            )
-                                          );
+                                        // favoritehandler.insertFavoriteRestaurant(
+                                        //   Restaurant(
+                                        //     seq: snapshot.data![index].seq,
+                                        //     category_id: snapshot.data![index].category_id,
+                                        //     user_seq: snapshot.data![index].user_seq,
+                                        //     name: snapshot.data![index].name, 
+                                        //     latitude: snapshot.data![index].latitude, 
+                                        //     longitude: snapshot.data![index].longitude, 
+                                        //     image: snapshot.data![index].image,
+                                        //     phone: snapshot.data![index].phone, 
+                                        //     represent: snapshot.data![index].represent, 
+                                        //     memo: snapshot.data![index].comment, 
+                                        //     favorite: snapshot.data![index] == "1" ? true : false
+                                        //     )
+                                        //   );
                                           Get.back();
                                       },
                                       child: const Text(
