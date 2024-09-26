@@ -5,8 +5,7 @@ import 'package:restaurant/model/restaurant.dart';
 class Restauranthandler{
 
   insertRestaurant(Restaurant restaurant) async{
-
-    var url = Uri.parse("http://127.0.0.1:8000/insert?catergory_id=${restaurant.category_id}&user_seq=${restaurant.user_seq}&name=${restaurant.name}&latitude=${restaurant.latitude}&longitude=${restaurant.longitude}&image=${restaurant.image}&phone=${restaurant.phone}&represent=${restaurant.represent}&memo=${restaurant.memo}&favorite=${restaurant.favorite? 1 : 0}");
+    var url = Uri.parse("http://127.0.0.1:8000/insert/restaurant?categoryId=${restaurant.category_id}&userSeq=${restaurant.user_seq}&name=${restaurant.name}&latitude=${restaurant.latitude}&longitude=${restaurant.longitude}&image=${restaurant.image}&phone=${restaurant.phone}&represent=${restaurant.represent}&memo=${restaurant.memo}&favorite=${restaurant.favorite? 1 : 0}");
     var response = await http.get(url);
 
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));

@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/route_manager.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:restaurant/model/category.dart';
 import 'package:restaurant/model/restaurant.dart';
+import 'package:restaurant/vm/categoryhandler.dart';
 import 'package:restaurant/vm/restauranthandler.dart';
 
 class AddRestaurant extends StatefulWidget {
@@ -19,10 +21,12 @@ class _AddRestaurantState extends State<AddRestaurant> {
 
   int user_seq = 1; ///////////// 나중에 꼭 바꿔주세요!
   String? imageName;
+  Categoryhandler categoryhandler = Categoryhandler();
+  Restauranthandler restauranthandler = Restauranthandler();
 
 
 
-  List<String> categories = Get.arguments ?? '__';
+  List<String> categories = [];
   String? selectedValue;
   late Position currentPosition;
   XFile? imageFile;
@@ -37,7 +41,6 @@ class _AddRestaurantState extends State<AddRestaurant> {
   late List location;
   late double latData;
   late double longData;
-  Restauranthandler restauranthandler = Restauranthandler();
 
   @override
   void initState() {
@@ -51,7 +54,22 @@ class _AddRestaurantState extends State<AddRestaurant> {
     phoneController = TextEditingController();
     representController = TextEditingController();
     commentController = TextEditingController();
+
+    yahoo();
+
   }
+
+  yahoo()async{
+    List<Category> wow = await categoryhandler.getCategory();
+
+    for(Category category in wow){
+      categories.add(category.id);
+    }
+    setState(() {});
+  }
+
+  
+
 
   checkLocationPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();
@@ -252,6 +270,8 @@ class _AddRestaurantState extends State<AddRestaurant> {
                                 ),
                               ),
                             ),
+
+
                             Padding(
                               padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
                               child: SizedBox(
@@ -278,8 +298,7 @@ class _AddRestaurantState extends State<AddRestaurant> {
                                             child: DropdownButtonHideUnderline(
                                   child: DropdownButton2<String>(
                                 hint: const Text('분류'),
-                                items: categories
-                                    .map((String categories) =>
+                                items: categories.map((String categories) =>
                                         DropdownMenuItem<String>(
                                           value: categories,
                                           child: Text(categories),
@@ -305,6 +324,9 @@ class _AddRestaurantState extends State<AddRestaurant> {
                                 ),
                               ),
                             ),
+
+
+
                             Padding(
                               padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
                               child: SizedBox(
@@ -361,6 +383,7 @@ class _AddRestaurantState extends State<AddRestaurant> {
                                                 border: Border.all(color: Colors.black)),
                                             width:
                                                 MediaQuery.of(context).size.width / 1.25,
+                                            height: 190,
                                             child: TextField(
                                               minLines: 8,
                                               maxLines: 20,
@@ -387,6 +410,7 @@ class _AddRestaurantState extends State<AddRestaurant> {
                     width: MediaQuery.of(context).size.width / 1.1,
                     child: ElevatedButton(
                         onPressed: () async {
+                          print('selectedValue : $selectedValue');
                           Restaurant restaurant = Restaurant(
                               category_id: selectedValue!,
                               user_seq: user_seq,
@@ -433,10 +457,12 @@ class _AddRestaurantState extends State<AddRestaurant> {
 
   addRestaurant(Restaurant restaurant) async {
     Get.back();
-    int result = await restauranthandler.insertRestaurant(restaurant);
-    if (result == 0) {
-      Get.snackbar('에러', '데이터가 입력되지 않았습니다.', backgroundColor: Colors.red);
-    }
+
+    restauranthandler.insertRestaurant(restaurant);
+    // int result = await restauranthandler.insertRestaurant(restaurant);
+    // if (result == 0) {
+    //   Get.snackbar('에러', '데이터가 입력되지 않았습니다.', backgroundColor: Colors.red);
+    // }
     setState(() {});
   }
 }
