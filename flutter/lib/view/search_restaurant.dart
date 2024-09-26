@@ -127,11 +127,11 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
                                           children: [
                                             Column(
                                               children: [
-                                                Image.memory(
-                                                  snapshot.data![index].image,
+                                                Image.network(
+                                                  'http://127.0.0.1:8000/image/view/${snapshot.data![index].image}',
                                                   width: 80,
                                                   height: 80,
-                                                )
+                                                ),
                                               ],
                                             ),
                                             Padding(

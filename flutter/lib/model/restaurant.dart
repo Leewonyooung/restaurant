@@ -29,7 +29,7 @@ class Restaurant{
     }
   );
 
-  Restaurant.fromMap(Map<String, dynamic> res):
+  Restaurant.fromMap(Map<dynamic, dynamic> res):
     seq = res['seq'],
     category_id = res['category_id'],
     user_seq = res['user_seq'],
@@ -40,5 +40,5 @@ class Restaurant{
     phone = res['phone'],
     represent = res['represent'],
     memo = res['memo'],
-    favorite = res['favorite'];
+    favorite = res['favorite'] == 1;
 }
