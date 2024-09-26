@@ -4,6 +4,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/route_manager.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:restaurant/model/category.dart';
 import 'package:restaurant/model/restaurant.dart';
@@ -18,8 +19,8 @@ class AddRestaurant extends StatefulWidget {
 }
 
 class _AddRestaurantState extends State<AddRestaurant> {
-
-  int user_seq = 1; ///////////// 나중에 꼭 바꿔주세요!
+  final box = GetStorage();
+  int? userSeq;  ///////////// 나중에 꼭 바꿔주세요!
   String? imageName;
   Categoryhandler categoryhandler = Categoryhandler();
   Restauranthandler restauranthandler = Restauranthandler();
@@ -45,6 +46,7 @@ class _AddRestaurantState extends State<AddRestaurant> {
   @override
   void initState() {
     super.initState();
+    userSeq = box.read('user_seq');
     latData = 0;
     longData = 0;
     checkLocationPermission();
@@ -410,10 +412,9 @@ class _AddRestaurantState extends State<AddRestaurant> {
                     width: MediaQuery.of(context).size.width / 1.1,
                     child: ElevatedButton(
                         onPressed: () async {
-                          print('selectedValue : $selectedValue');
                           Restaurant restaurant = Restaurant(
                               category_id: selectedValue!,
-                              user_seq: user_seq,
+                              user_seq: userSeq!,
                               name: nameController.text.trim(),
                               latitude:
                                   double.parse(latitudeController.text.trim()),

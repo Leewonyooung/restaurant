@@ -31,3 +31,20 @@ async def update():
         conn.close()
         print("Error:", e)
         return{"results" : "Error"}
+    
+@loginrouter.get("/seq")
+async def update(id : str):
+    conn = connect()
+    curs = conn.cursor()
+    try:
+        sql = "select seq from user where id =%s"
+        curs.execute(sql,(id))
+        rows= curs.fetchall()
+        conn.commit()
+        conn.close()
+        print(rows)
+        return {'result':rows}
+    except Exception as e:
+        conn.close()
+        print("Error:", e)
+        return{"results" : "Error"}

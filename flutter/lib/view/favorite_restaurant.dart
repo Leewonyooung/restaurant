@@ -85,9 +85,7 @@ class _FavoriteRestaurantState extends State<FavoriteRestaurant> {
                                   actions: [
                                     CupertinoActionSheetAction(
                                       onPressed: () {
-                                        updateJSONData(snapshot.data![index])
-                                        // .then((value) => reloadData(),)
-                                        ;
+                                        updateJSONData(snapshot.data![index]);
                                         Get.back();
                                       },
                                       child: const Text(
@@ -176,18 +174,13 @@ class _FavoriteRestaurantState extends State<FavoriteRestaurant> {
 
 
   updateJSONData(Restaurant restaurant) async {
-    print(restaurant.name);
     var url = Uri.parse(
         'http://127.0.0.1:8000/update?seq=${restaurant.seq}&category_id=${restaurant.category_id}&user_seq=${restaurant.user_seq}&name=${restaurant.name}&latitude=${restaurant.latitude}&longitude=${restaurant.longitude}&image=${restaurant.image}&phone=${restaurant.phone}&represent=${restaurant.represent}&memo=${restaurant.memo}&favorite=0');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['result'];
     setState(() {});
-    print(result);
   }
-
-
-
 
 
   reloadData() {

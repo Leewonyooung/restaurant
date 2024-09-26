@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/route_manager.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:restaurant/model/restaurant.dart';
 import 'package:restaurant/view/add_restaurant.dart';
 import 'package:restaurant/view/restaurant_location.dart';
 import 'package:restaurant/view/search_restaurant.dart';
@@ -11,6 +14,7 @@ import 'package:restaurant/view/update_restaurant.dart';
 import 'package:restaurant/vm/categoryhandler.dart';
 import 'package:restaurant/vm/restauranthandler.dart';
 import 'package:restaurant/vm/userhandler.dart';
+import 'package:http/http.dart' as http;
 
 class RestaurantList extends StatefulWidget {
   const RestaurantList({super.key});
@@ -29,7 +33,7 @@ class _RestaurantListState extends State<RestaurantList> {
   late String keyword;
   List data = [];
   String? userId;
-
+  String? userSeq;
   @override
   void initState() {
     super.initState();
@@ -54,6 +58,7 @@ class _RestaurantListState extends State<RestaurantList> {
       return;
     } else {
       box.write('state', '0');
+      box.write('user_seq', '0');
     }
   }
 
@@ -61,8 +66,10 @@ class _RestaurantListState extends State<RestaurantList> {
     if (box.read('state') == '0') {
       userId = await userhandler.initUser();
       box.write('state', '1');
-    } else {}
-    print(box.read('state'));
+      userSeq = await userhandler.getSeq(userId);
+    } else {
+      box.write('user_seq', userSeq);
+    }
   }
 
   @override
@@ -248,21 +255,7 @@ class _RestaurantListState extends State<RestaurantList> {
                                         actions: [
                                           CupertinoActionSheetAction(
                                             onPressed: () {
-                                              // favoritehandler.insertFavoriteRestaurant(
-                                              //   Restaurant(
-                                              //     seq: snapshot.data![index].seq,
-                                              //     category_id: snapshot.data![index].category_id,
-                                              //     user_seq: snapshot.data![index].user_seq,
-                                              //     name: snapshot.data![index].name,
-                                              //     latitude: snapshot.data![index].latitude,
-                                              //     longitude: snapshot.data![index].longitude,
-                                              //     image: snapshot.data![index].image,
-                                              //     phone: snapshot.data![index].phone,
-                                              //     represent: snapshot.data![index].represent,
-                                              //     memo: snapshot.data![index].comment,
-                                              //     favorite: snapshot.data![index] == "1" ? true : false
-                                              //     )
-                                              //   );
+                                             updateJSONData(snapshot.data![index]);
                                               Get.back();
                                             },
                                             child: const Text(
@@ -307,9 +300,10 @@ class _RestaurantListState extends State<RestaurantList> {
                                             Column(
                                               children: [
                                                 Image.network(
-                                                  'http://127.0.0.1:8000/image/view/${snapshot.data![index]['image']}',
-                                                  width: 80,
-                                                  height: 80,
+                                                  'http://127.0.0.1:8000/image/view/${snapshot.data![index].image}',
+                                                  fit: BoxFit.cover,
+                                                  width: MediaQuery.of(context).size.width / 3.5,
+                                                  height: MediaQuery.of(context).size.height / 10,
                                                 ),
                                               ],
                                             ),
@@ -325,10 +319,10 @@ class _RestaurantListState extends State<RestaurantList> {
                                                     padding: const EdgeInsets
                                                         .fromLTRB(0, 0, 0, 10),
                                                     child: Text(
-                                                        '매장명 : ${snapshot.data![index]['name']}'),
+                                                        '매장명 : ${snapshot.data![index].name}'),
                                                   ),
                                                   Text(
-                                                      '매장 번호 : ${snapshot.data![index]['phone']}'),
+                                                      '매장 번호 : ${snapshot.data![index].phone}'),
                                                 ],
                                               ),
                                             ),
@@ -357,6 +351,16 @@ class _RestaurantListState extends State<RestaurantList> {
 
   reloadData() {
     setState(() {});
+  }
+
+  updateJSONData(Restaurant restaurant) async {
+    var url = Uri.parse(
+        'http://127.0.0.1:8000/update?seq=${restaurant.seq}&category_id=${restaurant.category_id}&user_seq=${restaurant.user_seq}&name=${restaurant.name}&latitude=${restaurant.latitude}&longitude=${restaurant.longitude}&image=${restaurant.image}&phone=${restaurant.phone}&represent=${restaurant.represent}&memo=${restaurant.memo}&favorite=1');
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    var result = dataConvertedJSON['result'];
+    setState(() {});
+    print(result);
   }
 
   checkDelete(int seq, int user_seq) async {
