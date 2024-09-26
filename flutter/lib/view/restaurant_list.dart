@@ -185,23 +185,17 @@ class _RestaurantListState extends State<RestaurantList> {
                                         onPressed: (context) {
                                           Get.to(const UpdateRestaurant(),
                                                   arguments: [
-                                                snapshot.data![index]['seq'],
-                                                snapshot.data![index]
-                                                    ['category_id'],
-                                                snapshot.data![index]
-                                                    ['user_seq'],
-                                                snapshot.data![index]['name'],
-                                                snapshot.data![index]
-                                                    ['latitude'],
-                                                snapshot.data![index]
-                                                    ['longitude'],
-                                                snapshot.data![index]['image'],
-                                                snapshot.data![index]['phone'],
-                                                snapshot.data![index]
-                                                    ['represent'],
-                                                snapshot.data![index]['memo'],
-                                                snapshot.data![index]
-                                                    ['favorite'],
+                                                snapshot.data![index].seq,
+                                                snapshot.data![index].category_id,
+                                                snapshot.data![index].user_seq,
+                                                snapshot.data![index].name,
+                                                snapshot.data![index].latitude,
+                                                snapshot.data![index].longitude,
+                                                snapshot.data![index].image,
+                                                snapshot.data![index].phone,
+                                                snapshot.data![index].represent,
+                                                snapshot.data![index].memo,
+                                                snapshot.data![index].favorite,
                                               ])!
                                               .then(
                                             (value) => reloadData(),
@@ -220,7 +214,7 @@ class _RestaurantListState extends State<RestaurantList> {
                                         flex: 1,
                                         onPressed: (context) async {
                                           await checkDelete(
-                                            snapshot.data![index].id,
+                                            snapshot.data![index].seq,
                                             snapshot.data![index].user_seq,
                                           );
                                           reloadData();

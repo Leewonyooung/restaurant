@@ -27,7 +27,7 @@ class Restauranthandler{
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List result = dataConvertedJSON['results'];
-    return result;
+    return result.map((e) => Restaurant.fromMap(e),).toList();
   }
 
   Future<List> getFavoriteRestaurant(String category) async{

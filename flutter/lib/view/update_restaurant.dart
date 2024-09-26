@@ -441,7 +441,7 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
 
   updateJSONData() async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/update?seq=${value[0]}&category_id=${value[1]}&user_seq${value[2]}&name=${nameController.text}&latitude=${double.parse(latitudeController.text)}&longitude=${double.parse(longitudeController.text)}&phone=${phoneController.text}&represent=${representController.text}&memo=${commentController.text}&favorite=${value[10]}');
+        'http://127.0.0.1:8000/update?seq=${value[0]}&category_id=${value[1]}&user_seq=${value[2]}&name=${nameController.text}&latitude=${double.parse(latitudeController.text)}&longitude=${double.parse(longitudeController.text)}&phone=${phoneController.text}&represent=${representController.text}&memo=${commentController.text}&favorite=${value[10]?1:0}');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['result'];
@@ -457,7 +457,7 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
   updateJSONDataAll() async {
     await uploadImage();
     var url = Uri.parse(
-        'http://127.0.0.1:8000/update/all?seq=${value[0]}&category_id=${value[1]}&user_seq=${value[2]}&name=${nameController.text}&latitude=${double.parse(latitudeController.text)}&longitude=${double.parse(longitudeController.text)}&image=${filename}&phone=${phoneController.text}&represent=${representController.text}&memo=${commentController.text}&favorite=${value[10]}');
+        'http://127.0.0.1:8000/update/all?seq=${value[0]}&category_id=${value[1]}&user_seq=${value[2]}&name=${nameController.text}&latitude=${double.parse(latitudeController.text)}&longitude=${double.parse(longitudeController.text)}&image=${filename}&phone=${phoneController.text}&represent=${representController.text}&memo=${commentController.text}&favorite=${value[10]?1:0}');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['result'];

@@ -10,6 +10,7 @@ import 'package:restaurant/model/category.dart';
 import 'package:restaurant/model/restaurant.dart';
 import 'package:restaurant/vm/categoryhandler.dart';
 import 'package:restaurant/vm/restauranthandler.dart';
+import 'package:http/http.dart' as http;
 
 class AddRestaurant extends StatefulWidget {
   const AddRestaurant({super.key});
@@ -31,6 +32,7 @@ class _AddRestaurantState extends State<AddRestaurant> {
   String? selectedValue;
   late Position currentPosition;
   XFile? imageFile;
+  String filename = "";
   late TextEditingController latitudeController;
   late TextEditingController longitudeController;
   late TextEditingController nameController;
@@ -46,7 +48,7 @@ class _AddRestaurantState extends State<AddRestaurant> {
   @override
   void initState() {
     super.initState();
-    userSeq = box.read('user_seq');
+    userSeq = 1;
     latData = 0;
     longData = 0;
     checkLocationPermission();
@@ -443,6 +445,21 @@ class _AddRestaurantState extends State<AddRestaurant> {
     );
   }
 
+  uploadImage() async{
+    var request = http.MultipartRequest("POST", Uri.parse("http://127.0.0.1:8000/image/upload"));
+    var multipartFile = await http.MultipartFile.fromPath('file', imageFile!.path);
+    request.files.add(multipartFile);
+    List preFileName = imageFile!.path.split('/');
+    filename = preFileName[preFileName.length - 1];
+    print("upload filename : $filename");
+    var response = await request.send();
+    if(response.statusCode == 200){
+      print('success');
+    }else{
+      print("error");
+    }
+  }
+
   Future getImageFromGallery(ImageSource imageSource) async {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
     if (pickedFile == null) {
@@ -458,7 +475,7 @@ class _AddRestaurantState extends State<AddRestaurant> {
 
   addRestaurant(Restaurant restaurant) async {
     Get.back();
-
+    await uploadImage();
     restauranthandler.insertRestaurant(restaurant);
     // int result = await restauranthandler.insertRestaurant(restaurant);
     // if (result == 0) {
