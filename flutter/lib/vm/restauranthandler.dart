@@ -38,18 +38,25 @@ class Restauranthandler{
     return result;
   }
 
-  Future<List> deleteRestaurant(int seq, int user_seq) async{
+  deleteRestaurant(int seq, int user_seq) async{
     var url = Uri.parse("http://127.0.0.1:8000/delete?seq=$seq&user_seq=$user_seq");
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['results'];
-    return result.map(
-      (e) => Restaurant.fromMap(e)
-    ).tolist();
+    return result;
   }
 
-    Future<List>findRestaurantCategory(String keyword) async {
+  Future<List>findRestaurantCategory(String keyword) async {
     var url = Uri.parse("http://127.0.0.1:8000/read/bykeyword?keyword=$keyword");
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    List result = dataConvertedJSON['results'];
+    return result.map((e) => Restaurant.fromMap(e),).toList();
+  }
+
+  Future<List>findRestaurantFVR() async {
+
+    var url = Uri.parse("http://127.0.0.1:8000/read/favorite?favorite=1");
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List result = dataConvertedJSON['results'];
