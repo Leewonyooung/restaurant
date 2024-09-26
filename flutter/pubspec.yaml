@@ -48,6 +48,7 @@ dependencies:
   tab_indicator_styler: ^2.0.0
   pull_down_button: ^0.10.1
   http: ^1.2.2
+  get_storage: ^2.1.1
   
 dev_dependencies:
   flutter_test:

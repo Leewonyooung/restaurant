@@ -5,7 +5,7 @@ from update import router as update_router
 from create import createrouter as create_router
 from read import readrouter as read_router
 from image import router as image_router
-
+from login import loginrouter as loginrouter
 
 
 app = FastAPI()
@@ -14,6 +14,7 @@ app.include_router(update_router, prefix="/update", tags=["update"])
 app.include_router(create_router, prefix="/insert", tags=["insert"])
 app.include_router(read_router, prefix="/read", tags=["read"])
 app.include_router(image_router, prefix="/image", tags=["image"])
+app.include_router(loginrouter, prefix="/login", tags=["login"])
 
 
 if __name__ == "__main__":

@@ -22,7 +22,7 @@ class _FavoriteRestaurantState extends State<FavoriteRestaurant> {
   Restauranthandler handler = Restauranthandler();
 
   late String keyword;
-
+  Restauranthandler restauranthandler = Restauranthandler();
   @override
   void initState() {
     super.initState();

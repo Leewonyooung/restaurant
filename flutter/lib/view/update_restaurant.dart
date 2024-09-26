@@ -84,268 +84,316 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('맛집 정보 수정'),
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        toolbarHeight: 50,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: Text('맛집 정보 수정',
+        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
         ),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        getImageFromGallery(ImageSource.gallery);
-                      },
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0))),
-                      child: const Text('Image'),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-
-//---hjy수정---------------------------------------------------------------------
-                  child: Container(
-                    width: MediaQuery.of(context).size.width / 1.7,
-                    height: 150,
-                    decoration:
-                        BoxDecoration(border: Border.all(color: Colors.black)),
-                    child: firstDisp == 0
-                        ? Center(
-                            child: Image.network(
-                                "http://127.0.0.1:8000/image/view/${value[6]}"))
-                        : imageFile == null
-                            ? const Text('Image is not selected')
-                            : Image.file(File(imageFile!.path)),
-                  ),
-//------------------------------------------------------------------------------
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
+      ),
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SingleChildScrollView(
+            child: Center(
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 1.2,
-                        child: Row(
-                          children: [
-                            const Text(
-                              '위치 : ',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 0, 20, 0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.black)),
-                                height: MediaQuery.of(context).size.width / 9,
-                                width: MediaQuery.of(context).size.width / 3.5,
-                                child: TextField(
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                  readOnly: true,
-                                  controller: latitudeController,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black)),
-                              height: MediaQuery.of(context).size.width / 9,
-                              width: MediaQuery.of(context).size.width / 3.5,
-                              child: TextField(
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                ),
-                                readOnly: true,
-                                textAlign: TextAlign.center,
-                                controller: longitudeController,
-                              ),
-                            ),
-                          ],
-                        ),
+                      ElevatedButton(
+                        onPressed: () {
+                          getImageFromGallery(ImageSource.gallery);
+                        },
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0))),
+                        child: const Text('Image'),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
+                    ],
+                  ),
+
+                  
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+          
+          //---hjy수정---------------------------------------------------------------------
+                    child: Container(
+                      width: MediaQuery.of(context).size.width / 1.7,
+                      height: 150,
+                      decoration:
+                          BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.black)),
+                      child: firstDisp == 0
+                          ? Center(
+                              child: Image.network(
+                                  "http://127.0.0.1:8000/image/view/${value[6]}"))
+                          : imageFile == null
+                              ? const Text('Image is not selected')
+                              : Image.file(File(imageFile!.path)),
+                    ),
+          //------------------------------------------------------------------------------
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        SizedBox(
                           width: MediaQuery.of(context).size.width / 1.2,
-                          child: Row(
-                            children: [
-                              const Text(
-                                '이름 : ',
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 0, 20, 0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black)),
-                                  height: MediaQuery.of(context).size.width / 9,
-                                  width:
-                                      MediaQuery.of(context).size.width / 1.6,
-                                  child: TextField(
-                                    controller: nameController,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width / 1.2,
-                          child: Row(
-                            children: [
-                              const Text(
-                                '전화 : ',
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 0, 20, 0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black)),
-                                  height: MediaQuery.of(context).size.width / 9,
-                                  width:
-                                      MediaQuery.of(context).size.width / 1.6,
-                                  child: TextField(
-                                    controller: phoneController,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width / 1,
-                          child: Row(
-                            children: [
-                              const Text(
-                                '카테고리 : ',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 0, 20, 0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black)),
-                                  height: MediaQuery.of(context).size.width / 9,
-                                  width:
-                                      MediaQuery.of(context).size.width / 1.6,
-                                  child: TextField(
-                                    controller: groupController,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(0),
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width / 1,
-                          child: Row(
-                            children: [
-                              const Text(
-                                '대표 음식: ',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 0, 20, 0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black)),
-                                  height: MediaQuery.of(context).size.width / 9,
-                                  width:
-                                      MediaQuery.of(context).size.width / 1.6,
-                                  child: TextField(
-                                    controller: representController,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width / 1.2,
-                          child: Row(
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                '평가 : ',
-                                style: TextStyle(fontSize: 18),
+                                '위치',
+                                style: TextStyle(fontSize: 14),
                               ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 0, 20, 0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black)),
-                                  width:
-                                      MediaQuery.of(context).size.width / 1.6,
-                                  child: TextField(
-                                    minLines: 4,
-                                    maxLines: 15,
-                                    controller: commentController,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(8, 8, 30, 8),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10),
+                                          border: Border.all(color: Colors.black)),
+                                      height: MediaQuery.of(context).size.width / 9,
+                                      width: MediaQuery.of(context).size.width / 3,
+                                      child: TextField(
+                                        style: const TextStyle(
+                                          fontSize: 13,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                        readOnly: true,
+                                        controller: latitudeController,
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(color: Colors.black)),
+                                    height: MediaQuery.of(context).size.width / 9,
+                                    width: MediaQuery.of(context).size.width / 3,
+                                    child: TextField(
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                      ),
+                                      readOnly: true,
+                                      textAlign: TextAlign.center,
+                                      controller: longitudeController,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
                         ),
-                      ),
-                      ElevatedButton(
-                          onPressed: () {
-                            if (imageFile == null) {
-                              updateJSONData();
-                            } else {
-                              updateJSONDataAll();
-                            }
-                          },
-                          // onPressed: () async {
-                          //   Restaurant restaurant = Restaurant(
-                          //       id: value[0],
-                          //       name: nameController.text.trim(),
-                          //       group: groupController.text.trim(),
-                          //       latitude: double.parse(
-                          //           latitudeController.text.trim()),
-                          //       longitude: double.parse(
-                          //           longitudeController.text.trim()),
-                          //       phone: phoneController.text.trim(),
-                          //       represent: representController.text.trim(),
-                          //       comment: commentController.text.trim(),
-                          //       image: imageFile == null
-                          //           ? value[8]
-                          //           : await File(imageFile!.path)
-                          //               .readAsBytes());
-                          //   await updateRestaurant(restaurant);
-                          // },
-                          child: const Text('수정'))
-                    ],
-                  ),
-                )
-              ],
+                        Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width / 1.2,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                  const Text(
+                                    '이름',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10),
+                                            border: Border.all(color: Colors.black)),
+                                        height: MediaQuery.of(context).size.width / 9,
+                                        width:
+                                            MediaQuery.of(context).size.width / 1.25,
+                                        child: TextField(
+                                          controller: nameController,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width / 1.2,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  '전화',
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            border: Border.all(color: Colors.black)),
+                                        height: MediaQuery.of(context).size.width / 9,
+                                        width:
+                                            MediaQuery.of(context).size.width / 1.25,
+                                        child: TextField(
+                                          controller: phoneController,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width / 1.2,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  '분류',
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            border: Border.all(color: Colors.black)),
+                                        height: MediaQuery.of(context).size.width / 9,
+                                        width:
+                                            MediaQuery.of(context).size.width / 1.25,
+                                        child: TextField(
+                                          controller: groupController,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width / 1.2,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  '대표음식',
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            border: Border.all(color: Colors.black)),
+                                        height: MediaQuery.of(context).size.width / 9,
+                                        width:
+                                            MediaQuery.of(context).size.width / 1.25,
+                                        child: TextField(
+                                          controller: representController,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width / 1.2,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  '평가',
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start, 
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            border: Border.all(color: Colors.black)),
+                                        width:
+                                            MediaQuery.of(context).size.width / 1.25,
+                                        child: TextField(
+                                          minLines: 4,
+                                          maxLines: 15,
+                                          controller: commentController,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              if (imageFile == null) {
+                                updateJSONData();
+                              } else {
+                                updateJSONDataAll();
+                              }
+                            },
+                            // onPressed: () async {
+                            //   Restaurant restaurant = Restaurant(
+                            //       id: value[0],
+                            //       name: nameController.text.trim(),
+                            //       group: groupController.text.trim(),
+                            //       latitude: double.parse(
+                            //           latitudeController.text.trim()),
+                            //       longitude: double.parse(
+                            //           longitudeController.text.trim()),
+                            //       phone: phoneController.text.trim(),
+                            //       represent: representController.text.trim(),
+                            //       comment: commentController.text.trim(),
+                            //       image: imageFile == null
+                            //           ? value[8]
+                            //           : await File(imageFile!.path)
+                            //               .readAsBytes());
+                            //   await updateRestaurant(restaurant);
+                            // },
+                            child: const Text('수정'))
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -388,7 +436,6 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
     }else{
       print("error");
     }
-
   }
 
 

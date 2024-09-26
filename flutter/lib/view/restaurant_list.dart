@@ -3,12 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/route_manager.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:restaurant/view/add_restaurant.dart';
 import 'package:restaurant/view/restaurant_location.dart';
 import 'package:restaurant/view/search_restaurant.dart';
 import 'package:restaurant/view/update_restaurant.dart';
 import 'package:restaurant/vm/categoryhandler.dart';
 import 'package:restaurant/vm/restauranthandler.dart';
+import 'package:restaurant/vm/userhandler.dart';
 
 class RestaurantList extends StatefulWidget {
   const RestaurantList({super.key});
@@ -18,12 +20,15 @@ class RestaurantList extends StatefulWidget {
 }
 
 class _RestaurantListState extends State<RestaurantList> {
+  final box = GetStorage();
   Restauranthandler restauranthandler = Restauranthandler();
   Categoryhandler categoryhandler = Categoryhandler();
+  Userhandler userhandler = Userhandler();
   late List<String> categories;
   String? selectedValue;
   late String keyword;
   List data = [];
+  String? userId;
 
   @override
   void initState() {
@@ -32,14 +37,32 @@ class _RestaurantListState extends State<RestaurantList> {
     categories = [
       '전체',
     ];
+    initStorage();
+    firstRun();
     getCategory();
   }
 
-  getCategory()async{
+  getCategory() async {
     var temp = await categoryhandler.getCategory();
-    for(int i = 0; i < temp.length; i++){
+    for (int i = 0; i < temp.length; i++) {
       categories.add(temp[i].id);
     }
+  }
+
+  initStorage() {
+    if (box.read('state') == '1') {
+      return;
+    } else {
+      box.write('state', '0');
+    }
+  }
+
+  firstRun() async {
+    if (box.read('state') == '0') {
+      userId = await userhandler.initUser();
+      box.write('state', '1');
+    } else {}
+    print(box.read('state'));
   }
 
   @override
@@ -91,7 +114,6 @@ class _RestaurantListState extends State<RestaurantList> {
             ? restauranthandler.getAllRestaurant()
             : restauranthandler.getRestaurantbyC(selectedValue!),
         builder: (context, snapshot) {
-          // print(snapshot.data!);
           if (snapshot.hasData) {
             return Column(
               children: [
@@ -112,8 +134,7 @@ class _RestaurantListState extends State<RestaurantList> {
                                   DropdownMenuItem<String>(
                                     value: categories,
                                     child: Text(categories),
-                                  ))
-                              .toList(),
+                                  )).toList(),
                           value: selectedValue,
                           onChanged: (String? value) {
                             setState(() {
@@ -133,173 +154,194 @@ class _RestaurantListState extends State<RestaurantList> {
                 ),
                 SizedBox(
                   height: 570,
-                  child: ListView.builder(
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Slidable(
-                          startActionPane: ActionPane(
-                              extentRatio: 0.3,
-                              motion: const ScrollMotion(),
-                              children: [
-                                SlidableAction(
-                                  flex: 1,
-                                  onPressed: (context) {
-                                    Get.to(const UpdateRestaurant(),
-                                          arguments: [
-                                          snapshot.data![index]['seq'],
-                                          snapshot.data![index]['category_id'],
-                                          snapshot.data![index]['user_seq'],
-                                          snapshot.data![index]['name'],
-                                          snapshot.data![index]['latitude'],
-                                          snapshot.data![index]['longitude'],
-                                          snapshot.data![index]['image'],
-                                          snapshot.data![index]['phone'],
-                                          snapshot.data![index]['represent'],
-                                          snapshot.data![index]['memo'],
-                                          snapshot.data![index]['favorite'],
-                                        ])!
-                                        .then(
-                                      (value) => reloadData(),
-                                    );
-                                  },
-                                  backgroundColor: Colors.green,
-                                  icon: Icons.edit,
-                                  label: '수정',
-                                ),
-                              ]),
-                          endActionPane: ActionPane(
-                              extentRatio: 0.3,
-                              motion: const ScrollMotion(),
-                              children: [
-                                SlidableAction(
-                                  flex: 1,
-                                  onPressed: (context) async {
-                                    await checkDelete(
-                                        snapshot.data![index]['seq'],
-                                        snapshot.data![index]['user_seq'],
-                                    );
-                                    reloadData();
-                                  },
-                                  backgroundColor: Colors.red,
-                                  icon: Icons.delete_outline_outlined,
-                                  label: '삭제',
-                                ),
-                              ]),
-                          child: GestureDetector(
-                            onLongPress: () {
-                              showCupertinoModalPopup(
-                                context: context,
-                                barrierDismissible: true,
-                                builder: (context) => CupertinoActionSheet(
-                                  title: const Text(
-                                    '즐겨찾기',
-                                    style: TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  message: const Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Text(
-                                      '즐겨찾기에 추가하시겠습니까?',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  actions: [
-                                    CupertinoActionSheetAction(
-                                      onPressed: () {
-                                        // favoritehandler.insertFavoriteRestaurant(
-                                        //   Restaurant(
-                                        //     seq: snapshot.data![index].seq,
-                                        //     category_id: snapshot.data![index].category_id,
-                                        //     user_seq: snapshot.data![index].user_seq,
-                                        //     name: snapshot.data![index].name, 
-                                        //     latitude: snapshot.data![index].latitude, 
-                                        //     longitude: snapshot.data![index].longitude, 
-                                        //     image: snapshot.data![index].image,
-                                        //     phone: snapshot.data![index].phone, 
-                                        //     represent: snapshot.data![index].represent, 
-                                        //     memo: snapshot.data![index].comment, 
-                                        //     favorite: snapshot.data![index] == "1" ? true : false
-                                        //     )
-                                        //   );
-                                          Get.back();
-                                      },
-                                      child: const Text(
-                                        '예',
-                                        style: TextStyle(color: Colors.blue),
-                                      ),
-                                    ),
-                                  ],
-                                  cancelButton: CupertinoActionSheetAction(
-                                      onPressed: () => Get.back(),
-                                      child: const Text(
-                                        '아니오',
-                                        style: TextStyle(color: Colors.red),
-                                      )),
-                                ),
-                              );
-                            },
-                            onTap: () =>
-                                Get.to(const RestaurantLocation(), arguments: [
-                              snapshot.data![index].latitude,
-                              snapshot.data![index].longitude,
-                              snapshot.data![index].name,
-                            ]),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onPrimaryContainer),
-                              child: Card(
-                                color:
-                                    Theme.of(context).colorScheme.onSecondary,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: Row(
+                  child: snapshot.data!.isEmpty
+                      ? const Center(
+                          child: Text(
+                            '선택한 카테고리의 맛집이 없습니다.',
+                            style: TextStyle(
+                              fontSize: 24,
+                            ),
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Slidable(
+                                startActionPane: ActionPane(
+                                    extentRatio: 0.3,
+                                    motion: const ScrollMotion(),
                                     children: [
-                                      Column(
-                                        children: [
-                                          Image.network(
-                                            'http://127.0.0.1:8000/image/view/${snapshot.data![index]['image']}',
-                                            width: 80,
-                                            height: 80,
+                                      SlidableAction(
+                                        flex: 1,
+                                        onPressed: (context) {
+                                          Get.to(const UpdateRestaurant(),
+                                                  arguments: [
+                                                snapshot.data![index]['seq'],
+                                                snapshot.data![index]
+                                                    ['category_id'],
+                                                snapshot.data![index]
+                                                    ['user_seq'],
+                                                snapshot.data![index]['name'],
+                                                snapshot.data![index]
+                                                    ['latitude'],
+                                                snapshot.data![index]
+                                                    ['longitude'],
+                                                snapshot.data![index]['image'],
+                                                snapshot.data![index]['phone'],
+                                                snapshot.data![index]
+                                                    ['represent'],
+                                                snapshot.data![index]['memo'],
+                                                snapshot.data![index]
+                                                    ['favorite'],
+                                              ])!
+                                              .then(
+                                            (value) => reloadData(),
+                                          );
+                                        },
+                                        backgroundColor: Colors.green,
+                                        icon: Icons.edit,
+                                        label: '수정',
+                                      ),
+                                    ]),
+                                endActionPane: ActionPane(
+                                    extentRatio: 0.3,
+                                    motion: const ScrollMotion(),
+                                    children: [
+                                      SlidableAction(
+                                        flex: 1,
+                                        onPressed: (context) async {
+                                          await checkDelete(
+                                            snapshot.data![index].id,
+                                            snapshot.data![index].user_seq,
+                                          );
+                                          reloadData();
+                                        },
+                                        backgroundColor: Colors.red,
+                                        icon: Icons.delete_outline_outlined,
+                                        label: '삭제',
+                                      ),
+                                    ]),
+                                child: GestureDetector(
+                                  onLongPress: () {
+                                    showCupertinoModalPopup(
+                                      context: context,
+                                      barrierDismissible: true,
+                                      builder: (context) =>
+                                          CupertinoActionSheet(
+                                        title: const Text(
+                                          '즐겨찾기',
+                                          style: TextStyle(
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        message: const Padding(
+                                          padding: EdgeInsets.all(10),
+                                          child: Text(
+                                            '즐겨찾기에 추가하시겠습니까?',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        actions: [
+                                          CupertinoActionSheetAction(
+                                            onPressed: () {
+                                              // favoritehandler.insertFavoriteRestaurant(
+                                              //   Restaurant(
+                                              //     seq: snapshot.data![index].seq,
+                                              //     category_id: snapshot.data![index].category_id,
+                                              //     user_seq: snapshot.data![index].user_seq,
+                                              //     name: snapshot.data![index].name,
+                                              //     latitude: snapshot.data![index].latitude,
+                                              //     longitude: snapshot.data![index].longitude,
+                                              //     image: snapshot.data![index].image,
+                                              //     phone: snapshot.data![index].phone,
+                                              //     represent: snapshot.data![index].represent,
+                                              //     memo: snapshot.data![index].comment,
+                                              //     favorite: snapshot.data![index] == "1" ? true : false
+                                              //     )
+                                              //   );
+                                              Get.back();
+                                            },
+                                            child: const Text(
+                                              '예',
+                                              style:
+                                                  TextStyle(color: Colors.blue),
+                                            ),
                                           ),
                                         ],
+                                        cancelButton:
+                                            CupertinoActionSheetAction(
+                                                onPressed: () => Get.back(),
+                                                child: const Text(
+                                                  '아니오',
+                                                  style: TextStyle(
+                                                      color: Colors.red),
+                                                )),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            30, 0, 0, 0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                    );
+                                  },
+                                  onTap: () => Get.to(
+                                      const RestaurantLocation(),
+                                      arguments: [
+                                        snapshot.data![index].latitude,
+                                        snapshot.data![index].longitude,
+                                        snapshot.data![index].name,
+                                      ]),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimaryContainer),
+                                    child: Card(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSecondary,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: Row(
                                           children: [
-                                            Padding(
-                                              padding: const EdgeInsets.fromLTRB( 0, 0, 0, 10),
-                                              child: Text(
-                                                '매장명 : ${snapshot.data![index]['name']}'
-                                              ),
+                                            Column(
+                                              children: [
+                                                Image.network(
+                                                  'http://127.0.0.1:8000/image/view/${snapshot.data![index]['image']}',
+                                                  width: 80,
+                                                  height: 80,
+                                                ),
+                                              ],
                                             ),
-                                            Text(
-                                              '매장 번호 : ${snapshot.data![index]['phone']}'
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      30, 0, 0, 0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .fromLTRB(0, 0, 0, 10),
+                                                    child: Text(
+                                                        '매장명 : ${snapshot.data![index]['name']}'),
+                                                  ),
+                                                  Text(
+                                                      '매장 번호 : ${snapshot.data![index]['phone']}'),
+                                                ],
+                                              ),
                                             ),
                                           ],
                                         ),
                                       ),
-                                    ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
                 ),
               ],
             );
