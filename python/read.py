@@ -68,6 +68,7 @@ async def getbyCategory(keyword : str):
 
 @readrouter.get("/bykeyword")
 async def getbyCategory(keyword : str):
+    keyword = '%'+keyword+'%'
     conn = connect()
     curs = conn.cursor()
     try:

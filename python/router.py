@@ -12,6 +12,7 @@ app.include_router(delete_router, prefix="/delete", tags=["delete"])
 app.include_router(update_router, prefix="/update", tags=["update"])
 app.include_router(create_router, prefix="/insert", tags=["insert"])
 app.include_router(read_router, prefix="/read", tags=["read"])
+app.include_router(read_router, prefix="/image", tags=["image"])
 
 
 if __name__ == "__main__":
