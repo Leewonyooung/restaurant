@@ -3,12 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/route_manager.dart';
-import 'package:restaurant/model/restaurant.dart';
 import 'package:restaurant/view/add_restaurant.dart';
 import 'package:restaurant/view/restaurant_location.dart';
 import 'package:restaurant/view/search_restaurant.dart';
 import 'package:restaurant/view/update_restaurant.dart';
-// import 'package:restaurant/vm/favoritehandler.dart';
+import 'package:restaurant/vm/categoryhandler.dart';
 import 'package:restaurant/vm/restauranthandler.dart';
 
 class RestaurantList extends StatefulWidget {
@@ -20,11 +19,12 @@ class RestaurantList extends StatefulWidget {
 
 class _RestaurantListState extends State<RestaurantList> {
   Restauranthandler restauranthandler = Restauranthandler();
-  // Favoritehandler favoritehandler = Favoritehandler();
+  Categoryhandler categoryhandler = Categoryhandler();
   late List<String> categories;
   String? selectedValue;
   late String keyword;
   List data = [];
+
   @override
   void initState() {
     super.initState();
@@ -32,9 +32,15 @@ class _RestaurantListState extends State<RestaurantList> {
     categories = [
       '전체',
     ];
+    getCategory();
   }
 
-
+  getCategory()async{
+    var temp = await categoryhandler.getCategory();
+    for(int i = 0; i < temp.length; i++){
+      categories.add(temp[i].id);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +91,7 @@ class _RestaurantListState extends State<RestaurantList> {
             ? restauranthandler.getAllRestaurant()
             : restauranthandler.getRestaurantbyC(selectedValue!),
         builder: (context, snapshot) {
+          // print(snapshot.data!);
           if (snapshot.hasData) {
             return Column(
               children: [
@@ -129,6 +136,7 @@ class _RestaurantListState extends State<RestaurantList> {
                   child: ListView.builder(
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
+
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Slidable(
@@ -140,7 +148,7 @@ class _RestaurantListState extends State<RestaurantList> {
                                   flex: 1,
                                   onPressed: (context) {
                                     Get.to(const UpdateRestaurant(),
-                                            arguments: [
+                                          arguments: [
                                           snapshot.data![index].id!,
                                           snapshot.data![index].group,
                                           snapshot.data![index].name,
@@ -255,11 +263,11 @@ class _RestaurantListState extends State<RestaurantList> {
                                     children: [
                                       Column(
                                         children: [
-                                          Image.memory(
-                                            snapshot.data![index].image,
+                                          Image.network(
+                                            'http://127.0.0.1:8000/image/view/${snapshot.data![index]['image']}',
                                             width: 80,
                                             height: 80,
-                                          )
+                                          ),
                                         ],
                                       ),
                                       Padding(
@@ -270,14 +278,14 @@ class _RestaurantListState extends State<RestaurantList> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      0, 0, 0, 10),
+                                              padding: const EdgeInsets.fromLTRB( 0, 0, 0, 10),
                                               child: Text(
-                                                  '매장명 : ${snapshot.data![index].name}'),
+                                                '매장명 : ${snapshot.data![index]['name']}'
+                                              ),
                                             ),
                                             Text(
-                                                '매장 번호 : ${snapshot.data![index].phone}'),
+                                              '매장 번호 : ${snapshot.data![index]['phone']}'
+                                            ),
                                           ],
                                         ),
                                       ),

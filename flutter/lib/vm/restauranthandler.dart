@@ -20,10 +20,9 @@ class Restauranthandler{
     var url = Uri.parse("http://127.0.0.1:8000/read/");
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-    var result = dataConvertedJSON['results'];
-    return result.map(
-      (e) => Restaurant.fromMap(e)
-    ).tolist();
+    List result = dataConvertedJSON['results'];
+    print(result[0]['image']);
+    return result;
   }
 
   Future<List> getRestaurantbyC(String category) async{

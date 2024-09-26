@@ -40,5 +40,5 @@ class Restaurant{
     phone = res['phone'],
     represent = res['represent'],
     memo = res['memo'],
-    favorite = res['image'] == 1;
+    favorite = res['favorite'];
 }

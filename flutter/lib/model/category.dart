@@ -8,5 +8,5 @@ class Category {
   );
 
   Category.fromMap(Map<String, dynamic> res):
-    id = res['id'];
+    id = res['id'][0];
 }

@@ -62,9 +62,9 @@ class _RestaurantTabState extends State<RestaurantTab> with SingleTickerProvider
               height: 30,
               icon: SizedBox(width: 70, child: Icon(Icons.search_outlined)),
             ),
-            Tab(
-              icon: SizedBox(width: 70, child: Icon(Icons.star)),
-            ),
+            // Tab(
+            //   icon: SizedBox(width: 70, child: Icon(Icons.star)),
+            // ),
           ],
         ),
       ),
