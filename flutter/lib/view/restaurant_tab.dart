@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant/view/favorite_restaurant.dart';
 import 'package:restaurant/view/restaurant_list.dart';
 import 'package:restaurant/view/search_restaurant.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
@@ -17,7 +16,7 @@ class _RestaurantTabState extends State<RestaurantTab> with SingleTickerProvider
   @override
   void initState() {
     super.initState();
-    controller = TabController(length: 3 , vsync: this, animationDuration: Duration.zero); // length : 탭의 개수 (페이지의 개수)
+    controller = TabController(length: 2 , vsync: this, animationDuration: Duration.zero); // length : 탭의 개수 (페이지의 개수)
   }
 
   @override
@@ -33,7 +32,7 @@ class _RestaurantTabState extends State<RestaurantTab> with SingleTickerProvider
       body: TabBarView(
         physics: const NeverScrollableScrollPhysics(),
         controller: controller,
-        children: const [RestaurantList(), SearchRestaurant(), FavoriteRestaurant(), ],
+        children: const [RestaurantList(), SearchRestaurant() ],
       ),
       bottomNavigationBar: Container(
         color: Theme.of(context).colorScheme.secondaryContainer,
