@@ -10,7 +10,10 @@ class Categoryhandler {
     var response = await http.get(url);
     categoryList.clear();
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    
     List result = dataConvertedJSON['results'];
+    
     return result.map((e) => Category.fromMap(e)).toList();
+    // categoryList.addAll(result);
   }
 }

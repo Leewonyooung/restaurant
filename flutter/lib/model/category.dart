@@ -7,6 +7,6 @@ class Category {
     }
   );
 
-  Category.fromMap(Map<String, dynamic> res):
+  Category.fromMap(Map res):
     id = res['id'][0];
 }
