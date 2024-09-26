@@ -474,13 +474,13 @@ class _AddRestaurantState extends State<AddRestaurant> {
   }
 
   addRestaurant(Restaurant restaurant) async {
-    Get.back();
     await uploadImage();
-    restauranthandler.insertRestaurant(restaurant);
+    await restauranthandler.insertRestaurant(restaurant);
     // int result = await restauranthandler.insertRestaurant(restaurant);
     // if (result == 0) {
     //   Get.snackbar('에러', '데이터가 입력되지 않았습니다.', backgroundColor: Colors.red);
     // }
+    Get.back();
     setState(() {});
   }
 }

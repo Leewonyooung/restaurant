@@ -28,7 +28,7 @@ async def select():
     conn = connect()
     curs = conn.cursor()
     try:
-        sql = 'select seq, category_id,user_seq,name,latitude,longitude,image,phone,represent,memo,favorite from restaurant'
+        sql = 'select seq, category_id,user_seq,name,latitude,longitude,image,phone,represent,memo,favorite from restaurant order by seq DESC'
         curs.execute(sql)
         rows= curs.fetchall()
         conn.close()
@@ -52,6 +52,7 @@ async def getbyCategory(keyword : str):
                     restaurant
                 where 
                     category_id like %s
+                order by seq DESC
               """
         curs.execute(sql, (keyword))
         rows= curs.fetchall()
@@ -79,6 +80,7 @@ async def getbyCategory(keyword : str):
                     restaurant
                 where 
                     category_id like %s or name like %s or represent like %s or memo like %s
+                order by seq DESC
               """
         curs.execute(sql, (keyword, keyword, keyword, keyword))
         rows= curs.fetchall()
@@ -104,6 +106,7 @@ async def getFavoriteRestaurant(favorite : str):
                     restaurant
                 where 
                     favorite=%s
+                order by seq DESC
               """
         curs.execute(sql,(favorite))
         rows= curs.fetchall()

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/route_manager.dart';
 import 'package:get_storage/get_storage.dart';
@@ -34,6 +35,9 @@ class _RestaurantListState extends State<RestaurantList> {
   List data = [];
   String? userId;
   String? userSeq;
+
+  ScrollController listViewContoller = ScrollController();
+  
   @override
   void initState() {
     super.initState();
@@ -89,7 +93,8 @@ class _RestaurantListState extends State<RestaurantList> {
                     transition: Transition.topLevel,
                     duration: const Duration(milliseconds: 800))!
                 .then(
-              (value) => reloadData(),
+              (value) { 
+                reloadData();},
             ),
             icon: Icon(
               Icons.search,
@@ -105,7 +110,9 @@ class _RestaurantListState extends State<RestaurantList> {
                       duration: const Duration(milliseconds: 800),
                       arguments: categories)!
                   .then(
-                (value) => reloadData(),
+                (value) {
+                  listViewContoller.jumpTo(0);
+                  reloadData();},
               ),
               icon: Icon(
                 Icons.add_outlined,
@@ -160,7 +167,7 @@ class _RestaurantListState extends State<RestaurantList> {
                   ),
                 ),
                 SizedBox(
-                  height: 570,
+                  height: MediaQuery.of(context).size.height/1.4,
                   child: snapshot.data!.isEmpty
                       ? const Center(
                           child: Text(
@@ -171,6 +178,7 @@ class _RestaurantListState extends State<RestaurantList> {
                           ),
                         )
                       : ListView.builder(
+                          controller: listViewContoller,
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
                             return Padding(
@@ -198,7 +206,10 @@ class _RestaurantListState extends State<RestaurantList> {
                                                 snapshot.data![index].favorite,
                                               ])!
                                               .then(
-                                            (value) => reloadData(),
+                                            (value){
+                                              listViewContoller.jumpTo(0);
+                                              reloadData();
+                                            },
                                           );
                                         },
                                         backgroundColor: Colors.green,
@@ -343,7 +354,8 @@ class _RestaurantListState extends State<RestaurantList> {
     );
   }
 
-  reloadData() {
+  reloadData() async{
+    await restauranthandler.getAllRestaurant();
     setState(() {});
   }
 
