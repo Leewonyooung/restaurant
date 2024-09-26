@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:restaurant/view/restaurant_location.dart';
-import 'package:restaurant/vm/favoritehandler.dart';
+import 'package:restaurant/vm/restauranthandler.dart';
+
 
 class FavoriteRestaurant extends StatefulWidget {
   const FavoriteRestaurant({super.key});
@@ -13,14 +14,12 @@ class FavoriteRestaurant extends StatefulWidget {
 
 class _FavoriteRestaurantState extends State<FavoriteRestaurant> {
   late TextEditingController keywordController;
-  late Favoritehandler handler;
   late String keyword;
-
+  Restauranthandler restauranthandler = Restauranthandler();
   @override
   void initState() {
     super.initState();
     keyword = '';
-    handler = Favoritehandler();
     keywordController = TextEditingController();
   }
 
@@ -37,7 +36,7 @@ class _FavoriteRestaurantState extends State<FavoriteRestaurant> {
         ),
       ),
       body: FutureBuilder(
-        future: handler.queryRestaurant(),
+        future: restauranthandler.get
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return snapshot.data!.isEmpty

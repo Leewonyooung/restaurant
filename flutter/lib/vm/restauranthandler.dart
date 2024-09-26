@@ -19,7 +19,6 @@ class Restauranthandler{
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     List result = dataConvertedJSON['results'];
-    print(result[0]['image']);
     return result;
   }
 
@@ -27,10 +26,16 @@ class Restauranthandler{
     var url = Uri.parse("http://127.0.0.1:8000/read/bycategory?keyword=$category");
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-    var result = dataConvertedJSON['results'];
-    return result.map(
-      (e) => Restaurant.fromMap(e)
-    ).tolist();
+    List result = dataConvertedJSON['results'];
+    return result;
+  }
+
+  Future<List> getFavoriteRestaurant(String category) async{
+    var url = Uri.parse("http://127.0.0.1:8000/read/favorite");
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    List result = dataConvertedJSON['results'];
+    return result;
   }
 
   Future<List> deleteRestaurant(int seq, int user_seq) async{

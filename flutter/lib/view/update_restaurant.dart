@@ -388,7 +388,6 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
     }else{
       print("error");
     }
-
   }
 
 
