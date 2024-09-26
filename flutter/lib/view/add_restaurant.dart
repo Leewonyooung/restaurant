@@ -16,6 +16,12 @@ class AddRestaurant extends StatefulWidget {
 }
 
 class _AddRestaurantState extends State<AddRestaurant> {
+
+  int user_seq = 1; ///////////// 나중에 꼭 바꿔주세요!
+  String? imageName;
+
+
+
   List<String> categories = Get.arguments ?? '__';
   String? selectedValue;
   late Position currentPosition;
@@ -382,16 +388,18 @@ class _AddRestaurantState extends State<AddRestaurant> {
                     child: ElevatedButton(
                         onPressed: () async {
                           Restaurant restaurant = Restaurant(
+                              category_id: selectedValue!,
+                              user_seq: user_seq,
                               name: nameController.text.trim(),
-                              group: selectedValue!,
                               latitude:
                                   double.parse(latitudeController.text.trim()),
                               longitude:
                                   double.parse(longitudeController.text.trim()),
+                              image: imageName!,
                               phone: phoneController.text.trim(),
                               represent: representController.text.trim(),
-                              comment: commentController.text.trim(),
-                              image: await File(imageFile!.path).readAsBytes());
+                              memo: commentController.text.trim(),
+                              favorite: false);
                           await addRestaurant(restaurant);
                         },
                         style: ElevatedButton.styleFrom(
@@ -416,7 +424,10 @@ class _AddRestaurantState extends State<AddRestaurant> {
       return;
     } else {
       imageFile = XFile(pickedFile.path);
+      List preFileName = imageFile!.path.split('/');
+      imageName = preFileName[preFileName.length-1];
     }
+
     setState(() {});
   }
 
