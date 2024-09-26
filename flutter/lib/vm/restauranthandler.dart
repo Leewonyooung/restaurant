@@ -44,12 +44,10 @@ class Restauranthandler{
   }
 
     Future<List>findRestaurantCategory(String keyword) async {
-    
-    var url = Uri.parse("http://127.0.0.1:8000/read/bykeyword?keyword=$keyword}");
+    var url = Uri.parse("http://127.0.0.1:8000/read/bykeyword?keyword=$keyword");
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
-    var result = dataConvertedJSON['results'];
-    
+    List result = dataConvertedJSON['results'];
     return result.map((e) => Restaurant.fromMap(e),).toList();
   }
 
