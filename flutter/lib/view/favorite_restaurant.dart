@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:restaurant/model/restaurant.dart';
 import 'package:restaurant/view/restaurant_location.dart';
-import 'package:restaurant/vm/favoritehandler.dart';
+import 'package:restaurant/vm/restauranthandler.dart';
+import 'package:http/http.dart' as http;
+
 
 class FavoriteRestaurant extends StatefulWidget {
   const FavoriteRestaurant({super.key});
@@ -13,14 +18,16 @@ class FavoriteRestaurant extends StatefulWidget {
 
 class _FavoriteRestaurantState extends State<FavoriteRestaurant> {
   late TextEditingController keywordController;
-  late Favoritehandler handler;
+
+  Restauranthandler handler = Restauranthandler();
+
   late String keyword;
 
   @override
   void initState() {
     super.initState();
     keyword = '';
-    handler = Favoritehandler();
+
     keywordController = TextEditingController();
   }
 
@@ -37,7 +44,7 @@ class _FavoriteRestaurantState extends State<FavoriteRestaurant> {
         ),
       ),
       body: FutureBuilder(
-        future: handler.queryRestaurant(),
+        future: handler.findRestaurantFVR(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return snapshot.data!.isEmpty
@@ -56,7 +63,6 @@ class _FavoriteRestaurantState extends State<FavoriteRestaurant> {
                         padding: const EdgeInsets.all(8.0),
                         child: GestureDetector(
                           onLongPress: () {
-                         
                               showCupertinoModalPopup(
                                 context: context,
                                 barrierDismissible: true,
@@ -79,7 +85,9 @@ class _FavoriteRestaurantState extends State<FavoriteRestaurant> {
                                   actions: [
                                     CupertinoActionSheetAction(
                                       onPressed: () {
-                                        handler.deleteFavoriteRestaurant(snapshot.data![index].seq!).then((value) => reloadData(),);
+                                        updateJSONData(snapshot.data![index])
+                                        // .then((value) => reloadData(),)
+                                        ;
                                         Get.back();
                                       },
                                       child: const Text(
@@ -119,10 +127,10 @@ class _FavoriteRestaurantState extends State<FavoriteRestaurant> {
                                     Column(
                                       children: [
                                         Image.network(
-                                          snapshot.data![index].image,
+                                          'http://127.0.0.1:8000/image/view/${snapshot.data![index].image}',
                                           width: 80,
                                           height: 80,
-                                        )
+                                        ),
                                       ],
                                     ),
                                     Padding(
@@ -164,6 +172,23 @@ class _FavoriteRestaurantState extends State<FavoriteRestaurant> {
       ),
     );
   }
+
+
+
+  updateJSONData(Restaurant restaurant) async {
+    print(restaurant.name);
+    var url = Uri.parse(
+        'http://127.0.0.1:8000/update?seq=${restaurant.seq}&category_id=${restaurant.category_id}&user_seq=${restaurant.user_seq}&name=${restaurant.name}&latitude=${restaurant.latitude}&longitude=${restaurant.longitude}&image=${restaurant.image}&phone=${restaurant.phone}&represent=${restaurant.represent}&memo=${restaurant.memo}&favorite=0');
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    var result = dataConvertedJSON['result'];
+    setState(() {});
+    print(result);
+  }
+
+
+
+
 
   reloadData() {
     setState(() {});

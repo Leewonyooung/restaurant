@@ -177,8 +177,8 @@ class _RestaurantListState extends State<RestaurantList> {
                                   flex: 1,
                                   onPressed: (context) async {
                                     await checkDelete(
-                                        snapshot.data![index].id,
-                                        snapshot.data![index].user_seq,
+                                        snapshot.data![index]['seq'],
+                                        snapshot.data![index]['user_seq'],
                                     );
                                     reloadData();
                                   },
