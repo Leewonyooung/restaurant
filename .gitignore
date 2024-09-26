@@ -10,7 +10,8 @@
 # Files and directories created by pub
 .dart_tool/
 .packages
-/flutter/build/
+flutter/build/
+build/
 # If you're building an application, you may want to check-in your pubspec.lock
 pubspec.lock
 

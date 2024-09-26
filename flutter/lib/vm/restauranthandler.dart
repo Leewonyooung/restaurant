@@ -12,9 +12,7 @@ class Restauranthandler{
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['results'];
 
-    return result.map(
-      (e) => Restaurant.fromMap(e)
-    ).tolist();
+    return result;
   }
 
 
