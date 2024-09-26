@@ -1,11 +1,9 @@
-from fastapi import APIRouter, FastAPI, File, UploadFile
+from fastapi import APIRouter
 
 router = APIRouter()
 
-from fastapi.responses import FileResponse
 import pymysql
-import os
-import shutil
+
 
 
 def connect():

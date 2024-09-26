@@ -1,10 +1,7 @@
 import 'package:restaurant/model/restaurant.dart';
-import 'package:restaurant/vm/init_restaurant.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Favoritehandler{
-  InitRestaurant handler = InitRestaurant();
-
   Future<List<Restaurant>> queryRestaurant() async {
     final Database db = await handler.initializeDB();
     final List<Map<String, Object?>> queryResult = await db.rawQuery(

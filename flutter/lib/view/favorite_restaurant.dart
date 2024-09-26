@@ -79,7 +79,7 @@ class _FavoriteRestaurantState extends State<FavoriteRestaurant> {
                                   actions: [
                                     CupertinoActionSheetAction(
                                       onPressed: () {
-                                        handler.deleteFavoriteRestaurant(snapshot.data![index].id!).then((value) => reloadData(),);
+                                        handler.deleteFavoriteRestaurant(snapshot.data![index].seq!).then((value) => reloadData(),);
                                         Get.back();
                                       },
                                       child: const Text(
@@ -118,7 +118,7 @@ class _FavoriteRestaurantState extends State<FavoriteRestaurant> {
                                   children: [
                                     Column(
                                       children: [
-                                        Image.memory(
+                                        Image.network(
                                           snapshot.data![index].image,
                                           width: 80,
                                           height: 80,

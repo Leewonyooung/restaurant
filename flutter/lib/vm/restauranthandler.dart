@@ -18,25 +18,35 @@ class Restauranthandler{
     ).tolist();
   }
 
-  // Future<List<Restaurant>> findRestaurantCategory(String keyword) async {
-  //   final Database db = await handler.initializeDB();
-  //   final List<Map<String, Object?>> queryResult = await db.rawQuery(
-  //     """
-  //       select 
-  //             *
-  //       from 
-  //             restaurant 
-  //       where 
-  //             category like '%$keyword%' or name like '%$keyword%' or represent like '%$keyword%' or comment like '%$keyword%'
-  //     """
-  //   );
-  //   return queryResult
-  //       .map(
-  //         (e) => Restaurant.fromMap(e),
-  //       )
-  //       .toList();
-  // }
 
+  Future<List> getAllRestaurant() async{
+    var url = Uri.parse("http://127.0.0.1:8000/read/");
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    var result = dataConvertedJSON['results'];
+    return result.map(
+      (e) => Restaurant.fromMap(e)
+    ).tolist();
+  }
 
+  Future<List> getRestaurantbyC(String category) async{
+    var url = Uri.parse("http://127.0.0.1:8000/read/bycategory?keyword=$category");
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    var result = dataConvertedJSON['results'];
+    return result.map(
+      (e) => Restaurant.fromMap(e)
+    ).tolist();
+  }
+
+  Future<List> deleteRestaurant(int seq, int user_seq) async{
+    var url = Uri.parse("http://127.0.0.1:8000/delete?seq=$seq&user_seq=$user_seq");
+    var response = await http.get(url);
+    var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
+    var result = dataConvertedJSON['results'];
+    return result.map(
+      (e) => Restaurant.fromMap(e)
+    ).tolist();
+  }
 
 }

@@ -5,7 +5,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/route_manager.dart';
 import 'package:restaurant/model/restaurant.dart';
 import 'package:restaurant/view/add_restaurant.dart';
-import 'package:restaurant/view/pulldown.dart';
 import 'package:restaurant/view/restaurant_location.dart';
 import 'package:restaurant/view/search_restaurant.dart';
 import 'package:restaurant/view/update_restaurant.dart';
@@ -20,12 +19,12 @@ class RestaurantList extends StatefulWidget {
 }
 
 class _RestaurantListState extends State<RestaurantList> {
-  late Restauranthandler handler;
-  late Favoritehandler favoritehandler;
+  Restauranthandler restauranthandler = Restauranthandler();
+  Favoritehandler favoritehandler = Favoritehandler();
   late List<String> categories;
   String? selectedValue;
   late String keyword;
-
+  List data = [];
   @override
   void initState() {
     super.initState();
@@ -33,17 +32,9 @@ class _RestaurantListState extends State<RestaurantList> {
     categories = [
       '전체',
     ];
-    handler = Restauranthandler();
-    favoritehandler = Favoritehandler();
-    getCategory();
   }
 
-  getCategory() async {
-    List result = await handler.queryRestaurantCategory();
-    for (int i = 0; i < result.length; i++) {
-      categories.add(result[i].group);
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -91,8 +82,8 @@ class _RestaurantListState extends State<RestaurantList> {
       ),
       body: FutureBuilder(
         future: keyword == '전체'
-            ? handler.queryRestaurant()
-            : handler.searchRestaurantCategory(keyword.trim()),
+            ? restauranthandler.getAllRestaurant()
+            : restauranthandler.getRestaurantbyC(selectedValue!),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Column(
@@ -177,7 +168,9 @@ class _RestaurantListState extends State<RestaurantList> {
                                   flex: 1,
                                   onPressed: (context) async {
                                     await checkDelete(
-                                        snapshot.data![index].id!);
+                                        snapshot.data![index].id,
+                                        snapshot.data![index].user_seq,
+                                    );
                                     reloadData();
                                   },
                                   backgroundColor: Colors.red,
@@ -186,14 +179,6 @@ class _RestaurantListState extends State<RestaurantList> {
                                 ),
                               ]),
                           child: GestureDetector(
-                            onLongPressEnd: (details) => ExampleMenu(
-                              builder: (_, showMenu) => CupertinoButton(
-                                onPressed: showMenu,
-                                padding: EdgeInsets.zero,
-                                pressedOpacity: 1,
-                                child: Container(),
-                              ),
-                            ),
                             onLongPress: () {
                               showCupertinoModalPopup(
                                 context: context,
@@ -219,15 +204,17 @@ class _RestaurantListState extends State<RestaurantList> {
                                       onPressed: () {
                                         favoritehandler.insertFavoriteRestaurant(
                                           Restaurant(
-                                            id: snapshot.data![index].id,
+                                            seq: snapshot.data![index].seq,
+                                            category_id: snapshot.data![index].category_id,
+                                            user_seq: snapshot.data![index].user_seq,
                                             name: snapshot.data![index].name, 
-                                            group: snapshot.data![index].group, 
                                             latitude: snapshot.data![index].latitude, 
                                             longitude: snapshot.data![index].longitude, 
+                                            image: snapshot.data![index].image,
                                             phone: snapshot.data![index].phone, 
                                             represent: snapshot.data![index].represent, 
-                                            comment: snapshot.data![index].comment, 
-                                            image: snapshot.data![index].image
+                                            memo: snapshot.data![index].comment, 
+                                            favorite: snapshot.data![index] == "1" ? true : false
                                             )
                                           );
                                           Get.back();
@@ -321,7 +308,7 @@ class _RestaurantListState extends State<RestaurantList> {
     setState(() {});
   }
 
-  checkDelete(int id) async {
+  checkDelete(int seq, int user_seq) async {
     Get.defaultDialog(title: '경고', middleText: '정말 삭제하시겠습니까?', actions: [
       Row(
         children: [
@@ -341,7 +328,7 @@ class _RestaurantListState extends State<RestaurantList> {
             child: TextButton(
               onPressed: () async {
                 Get.back();
-                await handler.deleteRestaurant(id);
+                await restauranthandler.deleteRestaurant(seq, user_seq);
                 setState(() {});
               },
               style: TextButton.styleFrom(
