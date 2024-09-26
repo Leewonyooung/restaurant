@@ -75,7 +75,6 @@ class _RestaurantLocationState extends State<RestaurantLocation> {
                 ],
                ),
             ),
-
           ]
         )
       ],

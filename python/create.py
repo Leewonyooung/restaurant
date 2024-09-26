@@ -1,7 +1,7 @@
 """
 author: 이원영
 Description: 
-Date: 2024.09.25.
+Fixed: 2024.09.26.
 Usage: 맛집 Create(Insert)
 """
 import pymysql, os
