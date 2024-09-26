@@ -136,7 +136,6 @@ class _RestaurantListState extends State<RestaurantList> {
                   child: ListView.builder(
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
-
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Slidable(
@@ -149,15 +148,17 @@ class _RestaurantListState extends State<RestaurantList> {
                                   onPressed: (context) {
                                     Get.to(const UpdateRestaurant(),
                                           arguments: [
-                                          snapshot.data![index].id!,
-                                          snapshot.data![index].group,
-                                          snapshot.data![index].name,
-                                          snapshot.data![index].latitude,
-                                          snapshot.data![index].longitude,
-                                          snapshot.data![index].phone,
-                                          snapshot.data![index].represent,
-                                          snapshot.data![index].comment,
-                                          snapshot.data![index].image,
+                                          snapshot.data![index]['seq'],
+                                          snapshot.data![index]['category_id'],
+                                          snapshot.data![index]['user_seq'],
+                                          snapshot.data![index]['name'],
+                                          snapshot.data![index]['latitude'],
+                                          snapshot.data![index]['longitude'],
+                                          snapshot.data![index]['image'],
+                                          snapshot.data![index]['phone'],
+                                          snapshot.data![index]['represent'],
+                                          snapshot.data![index]['memo'],
+                                          snapshot.data![index]['favorite'],
                                         ])!
                                         .then(
                                       (value) => reloadData(),

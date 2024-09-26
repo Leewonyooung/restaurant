@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:restaurant/model/restaurant.dart';
 import 'package:restaurant/vm/restauranthandler.dart';
 import 'package:http/http.dart' as http;
 
@@ -53,11 +52,11 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
     groupController = TextEditingController();
     representController = TextEditingController();
     commentController = TextEditingController();
-    nameController.text = value[2];
+    nameController.text = value[3];
     groupController.text = value[1];
-    phoneController.text = value[5];
-    representController.text = value[6];
-    commentController.text = value[7];
+    phoneController.text = value[7];
+    representController.text = value[8];
+    commentController.text = value[9];
   }
 
   checkLocationPermission() async {
@@ -78,8 +77,8 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
     Position position = await Geolocator.getCurrentPosition();
     currentPosition = position;
     canRun = true;
-    latitudeController.text = value[3].toString();
-    longitudeController.text = value[4].toString();
+    latitudeController.text = value[4].toString();
+    longitudeController.text = value[5].toString();
     setState(() {});
   }
 
@@ -89,7 +88,7 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('맛집 수정'),
+          title: const Text('맛집 정보 수정'),
         ),
         body: SingleChildScrollView(
           child: Center(
@@ -121,7 +120,7 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
                     child: firstDisp == 0
                         ? Center(
                             child: Image.network(
-                                "http://127.0.0.1:8000/view/${value[5]}"))
+                                "http://127.0.0.1:8000/image/view/${value[6]}"))
                         : imageFile == null
                             ? const Text('Image is not selected')
                             : Image.file(File(imageFile!.path)),
@@ -375,6 +374,24 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
   // }
 
 //—hjy수정——————————————————————————————————
+
+  uploadImage() async{
+    var request = http.MultipartRequest("POST", Uri.parse("http://127.0.0.1:8000/image/upload"));
+    var multipartFile = await http.MultipartFile.fromPath('file', imageFile!.path);
+    request.files.add(multipartFile);
+    List preFileName = imageFile!.path.split('/');
+    filename = preFileName[preFileName.length - 1];
+    print("upload filename : ${filename}");
+    var response = await request.send();
+    if(response.statusCode == 200){
+      print('success');
+    }else{
+      print("error");
+    }
+
+  }
+
+
   updateJSONData() async {
     var url = Uri.parse(
         'http://127.0.0.1:8000/update?seq=${value[0]}&category_id=${value[1]}&user_seq${value[2]}&name=${nameController.text}&latitude=${double.parse(latitudeController.text)}&longitude=${double.parse(longitudeController.text)}&phone=${phoneController.text}&represent=${representController.text}&memo=${commentController.text}&favorite=${value[10]}');
@@ -388,9 +405,12 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
     }
   }
 
+
+
   updateJSONDataAll() async {
+    await uploadImage();
     var url = Uri.parse(
-        'http://127.0.0.1:8000/updateAll?seq=${value[0]}&category_id=${value[1]}&user_seq${value[2]}&name=${nameController.text}&latitude=${double.parse(latitudeController.text)}&longitude=${double.parse(longitudeController.text)}&image=${filename}&phone=${phoneController.text}&represent=${representController.text}&memo=${commentController.text}&favorite=${value[10]}');
+        'http://127.0.0.1:8000/update/all?seq=${value[0]}&category_id=${value[1]}&user_seq=${value[2]}&name=${nameController.text}&latitude=${double.parse(latitudeController.text)}&longitude=${double.parse(longitudeController.text)}&image=${filename}&phone=${phoneController.text}&represent=${representController.text}&memo=${commentController.text}&favorite=${value[10]}');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['result'];
