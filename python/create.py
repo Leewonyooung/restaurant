@@ -23,13 +23,29 @@ def connect():
     )
     return conn
 
-@createrouter.get("/")
-async def insert(categoryId: str=None, userSeq: str=None, name:str=None, latitude:str=None, longitude: str=None, image:str=None, phone:str=None, represent:str=None, memo:str=None, favorite:str=None):
+@createrouter.get("/restaurant")
+async def insertRestaurant(categoryId: str=None, userSeq: str=None, name:str=None, latitude:str=None, longitude: str=None, image:str=None, phone:str=None, represent:str=None, memo:str=None, favorite:str=None):
     conn = connect()
     curs = conn.cursor()
     try:
         sql = "insert into restaurant(category_id,user_seq,name,latitude,longitude,image,phone,represent,memo,favorite) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
         curs.execute(sql,(categoryId,userSeq,name,latitude,longitude,image,phone,represent,memo,favorite))
+        conn.commit()
+        conn.close()
+        return {'result':'OK'}
+    except Exception as e:
+        conn.close()
+        print("Error:", e)
+        return{"results" : "Error"}
+
+
+@createrouter.get("/category")
+async def insertCategory(id: str):
+    conn = connect()
+    curs = conn.cursor()
+    try:
+        sql = "insert into category(id) values(%s)"
+        curs.execute(sql,(id))
         conn.commit()
         conn.close()
         return {'result':'OK'}
