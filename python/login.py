@@ -1,9 +1,15 @@
+"""
+author: 이원영
+Description: 
+Fixed: 2024.09.26.
+Usage: 앱 실행시 자동로그인
+"""
+
 from fastapi import APIRouter
 import uuid
-
-loginrouter = APIRouter()
-
 import pymysql
+
+router = APIRouter()
 
 def connect():
     conn = pymysql.connect(
@@ -16,7 +22,7 @@ def connect():
     return conn
 
 
-@loginrouter.get("/")
+@router.get("/")
 async def update():
     id = uuid.uuid1()
     conn = connect()
@@ -32,7 +38,7 @@ async def update():
         print("Error:", e)
         return{"results" : "Error"}
     
-@loginrouter.get("/seq")
+@router.get("/seq")
 async def update(id : str):
     conn = connect()
     curs = conn.cursor()

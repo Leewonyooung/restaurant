@@ -1,12 +1,14 @@
-from fastapi import APIRouter, FastAPI, File, UploadFile
+"""
+author: 박상범
+Description: 
+Fixed: 2024.09.26.
+Usage: 맛집 Update
+"""
+
+from fastapi import APIRouter
+import pymysql
 
 router = APIRouter()
-
-from fastapi.responses import FileResponse
-import pymysql
-import os
-import shutil
-
 
 def connect():
     conn = pymysql.connect(
@@ -17,7 +19,6 @@ def connect():
         charset= 'utf8'
     )
     return conn
-
 
 @router.get("/")
 async def update(
@@ -47,6 +48,7 @@ async def update(
         print("Error :",e)
         return {"result" : "Error"}
     
+
 @router.get("/all")
 async def insert( 
     seq: str=None,

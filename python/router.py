@@ -1,11 +1,10 @@
 from fastapi import FastAPI
-
 from delete import router as delete_router
 from update import router as update_router
-from create import createrouter as create_router
-from read import readrouter as read_router
+from create import router as create_router
+from read import router as read_router
 from image import router as image_router
-from login import loginrouter as loginrouter
+from login import router as loginrouter
 
 
 app = FastAPI()

@@ -4,9 +4,10 @@ Description:
 Fixed: 2024.09.26.
 Usage: 맛집, 카테고리 Read(select)
 """
+
 import pymysql, os
-from fastapi import APIRouter, FastAPI, File, UploadFile
-readrouter = APIRouter()
+from fastapi import APIRouter
+router = APIRouter()
 
 UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):
@@ -23,7 +24,7 @@ def connect():
     )
     return conn
 
-@readrouter.get("/")
+@router.get("/")
 async def select():
     conn = connect()
     curs = conn.cursor()
@@ -40,7 +41,7 @@ async def select():
         print("Error:", e)
         return{"results" : "Error"}
 
-@readrouter.get("/bycategory")
+@router.get("/bycategory")
 async def getbyCategory(keyword : str):
     conn = connect()
     curs = conn.cursor()
@@ -67,7 +68,7 @@ async def getbyCategory(keyword : str):
         return{"results" : "Error"}
 
 
-@readrouter.get("/bykeyword")
+@router.get("/bykeyword")
 async def getbyCategory(keyword : str):
     keyword = '%' + keyword + "%"
     conn = connect()
@@ -94,7 +95,7 @@ async def getbyCategory(keyword : str):
         return{"results" : "Error"}
 
 
-@readrouter.get("/favorite")
+@router.get("/favorite")
 async def getFavoriteRestaurant(favorite : str):
     conn = connect()
     curs = conn.cursor()
@@ -121,7 +122,7 @@ async def getFavoriteRestaurant(favorite : str):
 
 
 
-@readrouter.get("/category")
+@router.get("/category")
 async def select():
     conn = connect()
     curs = conn.cursor()

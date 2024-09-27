@@ -5,8 +5,8 @@ Fixed: 2024.09.26.
 Usage: 맛집 Create(Insert)
 """
 import pymysql, os
-from fastapi import APIRouter, FastAPI, File, UploadFile
-createrouter = APIRouter()
+from fastapi import APIRouter
+router = APIRouter()
 
 UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):
@@ -23,7 +23,7 @@ def connect():
     )
     return conn
 
-@createrouter.get("/restaurant")
+@router.get("/restaurant")
 async def insertRestaurant(categoryId: str=None, userSeq: str=None, name:str=None, latitude:str=None, longitude: str=None, image:str=None, phone:str=None, represent:str=None, memo:str=None, favorite:str=None):
     conn = connect()
     curs = conn.cursor()
@@ -39,7 +39,7 @@ async def insertRestaurant(categoryId: str=None, userSeq: str=None, name:str=Non
         return{"results" : "Error"}
 
 
-@createrouter.get("/category")
+@router.get("/category")
 async def insertCategory(id: str):
     conn = connect()
     curs = conn.cursor()

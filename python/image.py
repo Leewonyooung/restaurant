@@ -1,11 +1,17 @@
-from fastapi import APIRouter, FastAPI, File, UploadFile
+"""
+author: 한재영, 박상범
+Description: 
+Fixed: 2024.09.26.
+Usage: 서버로 이미지 업로드
+"""
 
-router = APIRouter()
-
+from fastapi import APIRouter, File, UploadFile
 from fastapi.responses import FileResponse
 import pymysql
 import os
 import shutil
+
+router = APIRouter()
 
 UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):

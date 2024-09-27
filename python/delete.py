@@ -1,8 +1,13 @@
+"""
+author: 박상범
+Description: 
+Fixed: 2024.09.26.
+Usage: 맛집 Delete
+"""
 from fastapi import APIRouter
+import pymysql
 
 router = APIRouter()
-
-import pymysql
 
 
 
@@ -21,7 +26,6 @@ def connect():
 async def delete(seq : str = None, user_seq:str = None):
     conn = connect()
     curs = conn.cursor()
-
     try:
         sql = "delete from restaurant where seq=%s AND user_seq=%s"
         curs.execute(sql, (seq, user_seq))
