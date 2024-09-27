@@ -37,23 +37,55 @@
 ### Must To Eat 코딩
 
 ```
-저장 - 위치를 자동으로 가져오고 저장
+Shared DB를 활용한 CRUD및 fastAPI를 사용한 API를 통해 json데이터를 통해
+가져온 DB데이터로 ListView 만들기
+gps기능을 통한 등록시 현재위치를 자동으로 가져오기
 즐겨찾기 - 특히 즐겨 찾는 음식점을 즐겨찾기 탭으로 이동가능
 검색 - 저장된 음식점 중 특히 맛있었던 집을 검색 가능.
 ```
 
-## Contribution
+### 데모 시연
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=qUU8KJCgIMM
+" target="_blank"><img src="http://img.youtube.com/vi/qUU8KJCgIMM/0.jpg" 
+alt="IMAGE ALT TEXT HERE" width="720" height="480" border="10" /></a>
+
+
+## Progress
+
+~ 9.24. 개인 프로젝트로 must_eat 앱 구현
+
+9.25.
+  FastAPI를 통한 BackEnd API구현 완료
+
+9.26.
+  API를 통해 받아온 JSON데이터를 사용하도록 Flutter 코드 수정
+
+9.27.
+  디버깅및 오류 확인, 수정, 데모 영상 촬영 및 프로젝트 문서화
+
+
+## Contribution
+
   요약
-  - 탭바를 활용한 앱의 전체적인 ui, 맛집 전체 리스트, 검색 페이지 및 즐겨찾기 페이지. 맛집 위치 페이지
+  - Shared Database, FastAPI를 사용한 API 구현, 탭바를 활용한 앱의 전체적인 ui, 맛집 리스트 ListView, 맛집 리스트 CRUD, 즐겨찾기, 검색, 
  
+  Python
+  -  이원영 : Create, Read, Login
+  -  박상범 : Update, Delete, router, image
+  -  한재영 : image
+  
   View
+  -  이원영 : restaurant_list.dart, restaurant_location.dart, restaurant_tab.dart
+  -  박상범 : add_restaurant.dart, favorite_restaurant.dart, search_restaurant.dart, update_restaurant.dart
+  -  한재영 : update_restaurant.dart
+  
 
   View Model
-  - /purchase_handler/insertPurchase(),
-  - /shoes_market_app/lib/vm/transport_handler.dart
-  - /shoes_market_app/lib/vm/product_handler.dart
+   - 이원영 : category_handler, user_handler, restaurant_handler
+   - 박상범 : restaurant_handelr
+
+
+  문서화 
+  - 한재영
  
     
-
-
-
