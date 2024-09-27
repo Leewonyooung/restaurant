@@ -10,7 +10,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:restaurant/model/restaurant.dart';
 import 'package:restaurant/view/add_restaurant.dart';
 import 'package:restaurant/view/restaurant_location.dart';
-import 'package:restaurant/view/search_restaurant.dart';
 import 'package:restaurant/view/update_restaurant.dart';
 import 'package:restaurant/vm/categoryhandler.dart';
 import 'package:restaurant/vm/restauranthandler.dart';

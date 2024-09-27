@@ -8,6 +8,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:restaurant/model/category.dart';
 import 'package:restaurant/model/restaurant.dart';
+import 'package:restaurant/view/restaurant_list.dart';
 import 'package:restaurant/vm/categoryhandler.dart';
 import 'package:restaurant/vm/restauranthandler.dart';
 import 'package:http/http.dart' as http;
@@ -428,6 +429,7 @@ class _AddRestaurantState extends State<AddRestaurant> {
                               memo: commentController.text.trim(),
                               favorite: false);
                           await addRestaurant(restaurant);
+                          Get.back();
                         },
                         style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -475,12 +477,7 @@ class _AddRestaurantState extends State<AddRestaurant> {
 
   addRestaurant(Restaurant restaurant) async {
     await uploadImage();
-    await restauranthandler.insertRestaurant(restaurant);
-    // int result = await restauranthandler.insertRestaurant(restaurant);
-    // if (result == 0) {
-    //   Get.snackbar('에러', '데이터가 입력되지 않았습니다.', backgroundColor: Colors.red);
-    // }
-    Get.back();
+    restauranthandler.insertRestaurant(restaurant);
     setState(() {});
   }
 }

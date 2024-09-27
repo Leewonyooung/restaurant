@@ -37,7 +37,7 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
             children: [
               SizedBox(
                 height: 43,
-                width: MediaQuery.of(context).size.width / 1.38,
+                width: MediaQuery.of(context).size.width / 1.15,
                 child: SearchBar(
                   controller: keywordController,
                   onChanged: (value) {
@@ -56,20 +56,6 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
                       borderRadius: BorderRadius.circular(10))),
                 ),
               ),
-              TextButton(
-                  onPressed: () {
-                    Get.back();
-                    keywordController.text = '';
-                    keyword = '';
-                    setState(() {});
-                  },
-                  child: Text(
-                    '취소',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontSize: 20,
-                    ),
-                  )),
             ],
           ),
         ),
@@ -175,7 +161,10 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
                 );
               } else {
                 return const Center(
-                  child: Text('저장된 맛집이 없습니다.'),
+                  child: Text('저장된 맛집이 없습니다.',
+                    style: TextStyle(
+                      fontSize: 24,
+                    ),                                                                                       ),
                 );
               }
             },
