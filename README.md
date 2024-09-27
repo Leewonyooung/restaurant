@@ -1,5 +1,7 @@
 # Must To Eat
-![must_to_eat 복사본](https://github.com/user-attachments/assets/0afc9ada-47e4-4a13-8151-de6c43296045)
+<img width="328" alt="mustToEat" src="https://github.com/user-attachments/assets/75dc02ca-4f84-4572-94c4-4ce06eeab260">
+
+
 ## ERR
 <img width="489" alt="eer" src="https://github.com/user-attachments/assets/1fd2b18e-4c82-4a82-90ec-e221709eb267">
 
