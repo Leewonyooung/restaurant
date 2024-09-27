@@ -1,5 +1,9 @@
+/*
+author: 박상범
+Fixed: 2024.09.26.
+Usage: 맛집 추가하기
+*/
 import 'dart:io';
-
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -8,7 +12,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:restaurant/model/category.dart';
 import 'package:restaurant/model/restaurant.dart';
-import 'package:restaurant/view/restaurant_list.dart';
 import 'package:restaurant/vm/categoryhandler.dart';
 import 'package:restaurant/vm/restauranthandler.dart';
 import 'package:http/http.dart' as http;
@@ -416,8 +419,8 @@ class _AddRestaurantState extends State<AddRestaurant> {
                     child: ElevatedButton(
                         onPressed: () async {
                           Restaurant restaurant = Restaurant(
-                              category_id: selectedValue!,
-                              user_seq: userSeq!,
+                              categoryId: selectedValue!,
+                              userSeq: userSeq!,
                               name: nameController.text.trim(),
                               latitude:
                                   double.parse(latitudeController.text.trim()),
@@ -453,12 +456,11 @@ class _AddRestaurantState extends State<AddRestaurant> {
     request.files.add(multipartFile);
     List preFileName = imageFile!.path.split('/');
     filename = preFileName[preFileName.length - 1];
-    print("upload filename : $filename");
     var response = await request.send();
     if(response.statusCode == 200){
-      print('success');
+      return "upload filename : $filename";
     }else{
-      print("error");
+      return "Error";
     }
   }
 

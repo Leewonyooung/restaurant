@@ -1,3 +1,10 @@
+/*
+author: 이원영
+Description: 
+Fixed: 2024.09.26.
+Usage: 카드 클릭시 맛집의 위치 보여주는 페이지
+*/
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:get/route_manager.dart';
@@ -5,7 +12,6 @@ import 'package:latlong2/latlong.dart' as latlng;
 
 class RestaurantLocation extends StatefulWidget {
   const RestaurantLocation({super.key});
-
   @override
   State<RestaurantLocation> createState() => _RestaurantLocationState();
 }
@@ -68,12 +74,13 @@ class _RestaurantLocationState extends State<RestaurantLocation> {
                       ),
                     ),
                   ),
-                  const Icon(Icons.pin_drop,
-                  size: 50,
-                  color: Colors.red,
+                  const Icon(
+                    Icons.pin_drop,
+                    size: 50,
+                    color: Colors.red,
                   )
                 ],
-               ),
+              ),
             ),
           ]
         )

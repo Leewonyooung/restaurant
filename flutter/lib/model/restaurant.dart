@@ -1,9 +1,7 @@
-
-
 class Restaurant{
   int? seq;
-  late String category_id;
-  late int user_seq;
+  late String categoryId;
+  late int userSeq;
   late String name;
   late double latitude;
   late double longitude;
@@ -16,8 +14,8 @@ class Restaurant{
   Restaurant(
     {
       this.seq,
-      required this.category_id,
-      required this.user_seq,
+      required this.categoryId,
+      required this.userSeq,
       required this.name,
       required this.latitude,
       required this.longitude,
@@ -31,8 +29,8 @@ class Restaurant{
 
   Restaurant.fromMap(Map<dynamic, dynamic> res):
     seq = res['seq'],
-    category_id = res['category_id'],
-    user_seq = res['user_seq'],
+    categoryId = res['category_id'],
+    userSeq = res['user_seq'],
     name = res['name'],
     latitude = res['latitude'],
     longitude =  res['longitude'],

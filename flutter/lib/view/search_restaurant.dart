@@ -1,3 +1,9 @@
+/*
+author: 박상범
+Fixed: 2024.09.26.
+Usage: 맛집 검색하는 페이지
+*/
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:restaurant/view/restaurant_location.dart';
@@ -46,14 +52,18 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
                   },
                   trailing: [
                     IconButton(
-                        onPressed: () {
-                          keyword = keywordController.text.trim();
-                          setState(() {});
-                        },
-                        icon: const Icon(Icons.search)),
+                      onPressed: () {
+                        keyword = keywordController.text.trim();
+                        setState(() {});
+                      },
+                      icon: const Icon(Icons.search),
+                    ),
                   ],
-                  shape: WidgetStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10))),
+                  shape: WidgetStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -73,88 +83,79 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
                     children: [
                       SizedBox(
                         height: 600,
-                        child: keyword == ''
-                            ? const Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      '찾으려는 맛집을 검색하세요.',
-                                      style: TextStyle(
-                                        fontSize: 24,
-                                      ),
-                                    ),
-                                  ],
+                        child: keyword == ''?
+                         const Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '찾으려는 맛집을 검색하세요.',
+                                style: TextStyle(
+                                  fontSize: 24,
                                 ),
-                              )
-                            : ListView.builder(
-                                itemCount: snapshot.data!.length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: GestureDetector(
-                                      onTap: () => Get.to(
-                                          const RestaurantLocation(),
-                                          arguments: [
-                                            snapshot.data![index].latitude,
-                                            snapshot.data![index].longitude,
-                                            snapshot.data![index].name,
-                                          ]),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onPrimaryContainer),
-                                        child: Card(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSecondary,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(20.0),
-                                            child: Row(
+                              ),
+                            ],
+                          ),
+                        ): 
+                        ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () => Get.to(
+                                  const RestaurantLocation(),
+                                  arguments: [
+                                    snapshot.data![index].latitude,
+                                    snapshot.data![index].longitude,
+                                    snapshot.data![index].name,
+                                  ]
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius:BorderRadius.circular(15),
+                                    color: Theme.of(context).colorScheme.onPrimaryContainer
+                                  ),
+                                  child: Card(
+                                    color: Theme.of(context).colorScheme.onSecondary,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Row(
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Image.network(
+                                                'http://127.0.0.1:8000/image/view/${snapshot.data![index].image}',
+                                                width: 80,
+                                                height: 80,
+                                              ),
+                                            ],
+                                          ),
+                                          Padding(
+                                            padding:const EdgeInsets.fromLTRB(30, 0, 0, 0),
+                                            child: Column(
+                                              crossAxisAlignment:CrossAxisAlignment.start,
                                               children: [
-                                                Column(
-                                                  children: [
-                                                    Image.network(
-                                                      'http://127.0.0.1:8000/image/view/${snapshot.data![index].image}',
-                                                      width: 80,
-                                                      height: 80,
-                                                    ),
-                                                  ],
-                                                ),
                                                 Padding(
-                                                  padding:
-                                                      const EdgeInsets.fromLTRB(
-                                                          30, 0, 0, 0),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .fromLTRB(
-                                                                0, 0, 0, 10),
-                                                        child: Text(
-                                                            '매장명 : ${snapshot.data![index].name}'),
-                                                      ),
-                                                      Text(
-                                                          '매장 번호 : ${snapshot.data![index].phone}'),
-                                                    ],
-                                                  ),
+                                                  padding:const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                                                  child: Text(
+                                                    '매장명 : ${snapshot.data![index].name}'),
+                                                ),
+                                                Text(
+                                                  '매장 번호 : ${snapshot.data![index].phone}'
                                                 ),
                                               ],
                                             ),
                                           ),
-                                        ),
+                                        ],
                                       ),
                                     ),
-                                  );
-                                },
+                                  ),
+                                ),
                               ),
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -164,7 +165,8 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
                   child: Text('저장된 맛집이 없습니다.',
                     style: TextStyle(
                       fontSize: 24,
-                    ),                                                                                       ),
+                    ),
+                  ),
                 );
               }
             },

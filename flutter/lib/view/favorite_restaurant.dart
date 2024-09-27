@@ -1,5 +1,9 @@
+/*
+author: 박상범
+Fixed: 2024.09.26.
+Usage: 즐겨찾기한 맛집 페이지
+*/
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -126,8 +130,9 @@ class _FavoriteRestaurantState extends State<FavoriteRestaurant> {
                                       children: [
                                         Image.network(
                                           'http://127.0.0.1:8000/image/view/${snapshot.data![index].image}',
-                                          width: 80,
-                                          height: 80,
+                                            width: MediaQuery.of(context).size.width / 3.5,
+                                            height: MediaQuery.of(context).size.height / 10,
+                                            fit: BoxFit.cover,
                                         ),
                                       ],
                                     ),
@@ -175,11 +180,16 @@ class _FavoriteRestaurantState extends State<FavoriteRestaurant> {
 
   updateJSONData(Restaurant restaurant) async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/update?seq=${restaurant.seq}&category_id=${restaurant.category_id}&user_seq=${restaurant.user_seq}&name=${restaurant.name}&latitude=${restaurant.latitude}&longitude=${restaurant.longitude}&image=${restaurant.image}&phone=${restaurant.phone}&represent=${restaurant.represent}&memo=${restaurant.memo}&favorite=0');
+        'http://127.0.0.1:8000/update?seq=${restaurant.seq}&category_id=${restaurant.categoryId}&user_seq=${restaurant.userSeq}&name=${restaurant.name}&latitude=${restaurant.latitude}&longitude=${restaurant.longitude}&image=${restaurant.image}&phone=${restaurant.phone}&represent=${restaurant.represent}&memo=${restaurant.memo}&favorite=0');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['result'];
     setState(() {});
+    if(result == "OK"){
+      return "OK";
+    }else{
+      return "Update Failed";
+    }
   }
 
 

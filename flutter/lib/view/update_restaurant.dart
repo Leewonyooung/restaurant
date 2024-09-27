@@ -1,6 +1,11 @@
+/*
+author: 박상범
+Fixed: 2024.09.26.
+Usage: 선택한 맛집 정보 수정 페이지
+*/
+
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -115,17 +120,16 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
                       ),
                     ],
                   ),
-
-                  
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-          
           //---hjy수정---------------------------------------------------------------------
                     child: Container(
                       width: MediaQuery.of(context).size.width / 1.7,
                       height: 150,
-                      decoration:
-                          BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.black)),
+                      decoration:BoxDecoration(
+                        borderRadius: BorderRadius.circular(10), 
+                        border: Border.all(color: Colors.black)
+                      ),
                       child: firstDisp == 0
                           ? Center(
                               child: Image.network(
@@ -173,7 +177,8 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
                                   Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(color: Colors.black)),
+                                      border: Border.all(color: Colors.black)
+                                    ),
                                     height: MediaQuery.of(context).size.width / 9,
                                     width: MediaQuery.of(context).size.width / 3,
                                     child: TextField(
@@ -209,10 +214,10 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
                                       child: Container(
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(10),
-                                            border: Border.all(color: Colors.black)),
+                                          border: Border.all(color: Colors.black)
+                                        ),
                                         height: MediaQuery.of(context).size.width / 9,
-                                        width:
-                                            MediaQuery.of(context).size.width / 1.25,
+                                        width:MediaQuery.of(context).size.width / 1.25,
                                         child: TextField(
                                           controller: nameController,
                                         ),
@@ -242,11 +247,11 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
                                       padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                                       child: Container(
                                         decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10),
-                                            border: Border.all(color: Colors.black)),
+                                          borderRadius: BorderRadius.circular(10),
+                                          border: Border.all(color: Colors.black)
+                                        ),
                                         height: MediaQuery.of(context).size.width / 9,
-                                        width:
-                                            MediaQuery.of(context).size.width / 1.25,
+                                        width:MediaQuery.of(context).size.width / 1.25,
                                         child: TextField(
                                           controller: phoneController,
                                         ),
@@ -259,7 +264,7 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
                           ),
                         ),
                         Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+                          padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width / 1.2,
                             child: Column(
@@ -276,11 +281,11 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
                                       padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                                       child: Container(
                                         decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10),
-                                            border: Border.all(color: Colors.black)),
+                                          borderRadius: BorderRadius.circular(10),
+                                          border: Border.all(color: Colors.black),
+                                        ),
                                         height: MediaQuery.of(context).size.width / 9,
-                                        width:
-                                            MediaQuery.of(context).size.width / 1.25,
+                                        width:MediaQuery.of(context).size.width / 1.25,
                                         child: TextField(
                                           controller: groupController,
                                         ),
@@ -293,7 +298,7 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
                           ),
                         ),
                         Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+                          padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width / 1.2,
                             child: Column(
@@ -310,11 +315,11 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
                                       padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                                       child: Container(
                                         decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10),
-                                            border: Border.all(color: Colors.black)),
+                                          borderRadius: BorderRadius.circular(10),
+                                          border: Border.all(color: Colors.black),
+                                        ),
                                         height: MediaQuery.of(context).size.width / 9,
-                                        width:
-                                            MediaQuery.of(context).size.width / 1.25,
+                                        width:MediaQuery.of(context).size.width / 1.25,
                                         child: TextField(
                                           controller: representController,
                                         ),
@@ -327,7 +332,7 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
                           ),
                         ),
                         Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
+                          padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width / 1.2,
                             child: Column(
@@ -345,10 +350,10 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
                                       padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                                       child: Container(
                                         decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10),
-                                            border: Border.all(color: Colors.black)),
-                                        width:
-                                            MediaQuery.of(context).size.width / 1.25,
+                                          borderRadius: BorderRadius.circular(10),
+                                          border: Border.all(color: Colors.black),
+                                        ),
+                                        width:MediaQuery.of(context).size.width / 1.25,
                                         child: TextField(
                                           minLines: 4,
                                           maxLines: 15,
@@ -363,32 +368,15 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
                           ),
                         ),
                         ElevatedButton(
-                            onPressed: () {
-                              if (imageFile == null) {
-                                updateJSONData();
-                              } else {
-                                updateJSONDataAll();
-                              }
-                            },
-                            // onPressed: () async {
-                            //   Restaurant restaurant = Restaurant(
-                            //       id: value[0],
-                            //       name: nameController.text.trim(),
-                            //       group: groupController.text.trim(),
-                            //       latitude: double.parse(
-                            //           latitudeController.text.trim()),
-                            //       longitude: double.parse(
-                            //           longitudeController.text.trim()),
-                            //       phone: phoneController.text.trim(),
-                            //       represent: representController.text.trim(),
-                            //       comment: commentController.text.trim(),
-                            //       image: imageFile == null
-                            //           ? value[8]
-                            //           : await File(imageFile!.path)
-                            //               .readAsBytes());
-                            //   await updateRestaurant(restaurant);
-                            // },
-                            child: const Text('수정'))
+                          onPressed: () {
+                            if (imageFile == null) {
+                              updateJSONData();
+                            } else {
+                              updateJSONDataAll();
+                            }
+                          },
+                          child: const Text('수정'),
+                        )
                       ],
                     ),
                   )
@@ -407,19 +395,8 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
     imageFile = XFile(pickedFile!.path);
     firstDisp = 1; //수정할때
     setState(() {});
-    print(imageFile!.path); //이미지 경로 확인
   }
 
-//———————————————————————————————————————
-
-  // updateRestaurant(Restaurant restaurant) async {
-  //   Get.back();
-  //   int result = await restauranthandler.updateRestaurant(restaurant);
-  //   if (result == 0) {
-  //     Get.snackbar('에러', '데이터가 입력되지 않았습니다.', backgroundColor: Colors.red);
-  //   }
-  //   setState(() {});
-  // }
 
 //—hjy수정——————————————————————————————————
 
@@ -429,12 +406,11 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
     request.files.add(multipartFile);
     List preFileName = imageFile!.path.split('/');
     filename = preFileName[preFileName.length - 1];
-    print("upload filename : ${filename}");
     var response = await request.send();
     if(response.statusCode == 200){
-      print('success');
+      return "upload filename : $filename";
     }else{
-      print("error");
+      return "error";
     }
   }
 
@@ -457,7 +433,7 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
   updateJSONDataAll() async {
     await uploadImage();
     var url = Uri.parse(
-        'http://127.0.0.1:8000/update/all?seq=${value[0]}&category_id=${value[1]}&user_seq=${value[2]}&name=${nameController.text}&latitude=${double.parse(latitudeController.text)}&longitude=${double.parse(longitudeController.text)}&image=${filename}&phone=${phoneController.text}&represent=${representController.text}&memo=${commentController.text}&favorite=${value[10]?1:0}');
+        'http://127.0.0.1:8000/update/all?seq=${value[0]}&category_id=${value[1]}&user_seq=${value[2]}&name=${nameController.text}&latitude=${double.parse(latitudeController.text)}&longitude=${double.parse(longitudeController.text)}&image=$filename&phone=${phoneController.text}&represent=${representController.text}&memo=${commentController.text}&favorite=${value[10]?1:0}');
     var response = await http.get(url);
     var dataConvertedJSON = json.decode(utf8.decode(response.bodyBytes));
     var result = dataConvertedJSON['result'];
@@ -491,7 +467,7 @@ class _UpdateRestaurantState extends State<UpdateRestaurant> {
       "Error",
       "데이터를 확인하세요",
       snackPosition: SnackPosition.BOTTOM,
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
       backgroundColor: Colors.red,
       colorText: Colors.amber,
     );

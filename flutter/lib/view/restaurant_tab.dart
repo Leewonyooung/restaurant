@@ -1,3 +1,10 @@
+/*
+author: 이원영
+Description: 
+Fixed: 2024.09.26.
+Usage: 탭바
+*/
+
 import 'package:flutter/material.dart';
 import 'package:restaurant/view/favorite_restaurant.dart';
 import 'package:restaurant/view/restaurant_list.dart';
