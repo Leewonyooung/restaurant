@@ -1,5 +1,5 @@
 # Must To Eat
-<img width="328" alt="mustToEat" src="https://github.com/user-attachments/assets/75dc02ca-4f84-4572-94c4-4ce06eeab260">
+<img width="328" alt="mustToEat" src="https://github.com/user-attachments/assets/266122a7-3152-4925-8bfa-1499e8f47808">
 
 
 ## ERR
